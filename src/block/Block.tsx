@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { useState } from "react";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
 
@@ -7,13 +7,30 @@ interface ArgumentOptions {
   expandable?: boolean;
 }
 
-interface BlockProps {
+export interface BlockProps {
   name: string;
   argumentOptions: ArgumentOptions;
+  // TODO: i don't like this implementation of child
+  //  blocks, ideally i'd like child elements
+  childBlocks?: BlockProps[];
 }
 
-export function Block({ name, argumentOptions: { minAmount } }: BlockProps) {
-  const [args] = useState<null[]>(Array.from({ length: minAmount }));
+export function Block({
+  name,
+  argumentOptions: { minAmount },
+  childBlocks,
+}: BlockProps) {
+  const [args] = useState<(BlockProps | undefined)[]>(() => {
+    if (!childBlocks) {
+      return Array.from({ length: minAmount });
+    }
+    if (childBlocks.length > minAmount) {
+      return childBlocks;
+    }
+    return childBlocks.concat(
+      Array.from({ length: minAmount - childBlocks.length }),
+    );
+  });
 
   return (
     <Stack
@@ -26,13 +43,14 @@ export function Block({ name, argumentOptions: { minAmount } }: BlockProps) {
       useFlexGap
     >
       ({name}
-      {args.map((_, index) =>
+      {args.map((blockProps, index) =>
         index === args.length - 1 ? (
-          <Stack direction={"row"} alignItems={"center"} key={index}>
-            <ArgumentSlot />)
+          <Stack direction={"row"} alignItems={"flex-end"} key={index}>
+            <ArgumentSlot blockProps={blockProps} />{" "}
+            <Box marginLeft={"0.25em"}>)</Box>
           </Stack>
         ) : (
-          <ArgumentSlot key={index} />
+          <ArgumentSlot blockProps={blockProps} key={index} />
         ),
       )}
     </Stack>

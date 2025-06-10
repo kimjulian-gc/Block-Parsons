@@ -4,15 +4,15 @@ import { Block } from "./Block.tsx";
 import { BlockLabels } from "./aria-labels.ts";
 
 describe("Block component", () => {
-  const testName = "Block component renders passed name prop";
+  const testName = "Block component test block";
   const argumentAmt = 3;
-  const mainTestBlock = (
+  const testBlock1 = (
     <Block name={testName} argumentOptions={{ minAmount: argumentAmt }} />
   );
   let renderResult: RenderResult;
 
   beforeEach(() => {
-    renderResult = render(mainTestBlock);
+    renderResult = render(testBlock1);
   });
 
   it("renders passed name prop", () => {
@@ -22,5 +22,19 @@ describe("Block component", () => {
     expect(
       renderResult.getAllByLabelText(BlockLabels.ArgumentSlot),
     ).toHaveLength(argumentAmt);
+  });
+  it("renders with passed Block children", () => {
+    const testName2 = "Parent block";
+    const argumentAmt = 2;
+    renderResult.unmount();
+    renderResult = render(
+      <Block
+        name={testName2}
+        argumentOptions={{ minAmount: argumentAmt }}
+        childBlocks={[testBlock1.props]}
+      />,
+    );
+
+    expect(renderResult.getByText(new RegExp(testName))).toBeInTheDocument();
   });
 });

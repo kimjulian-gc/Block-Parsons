@@ -1,7 +1,12 @@
 import { BlockLabels } from "./aria-labels.ts";
 import { Box } from "@mui/material";
+import { Block, type BlockProps } from "./Block.tsx";
 
-export function ArgumentSlot() {
+interface ArgumentSlotProps {
+  blockProps?: BlockProps;
+}
+
+export function ArgumentSlot({ blockProps }: ArgumentSlotProps) {
   return (
     <Box
       width={"fit-content"}
@@ -12,6 +17,8 @@ export function ArgumentSlot() {
       borderRadius={"0.5em"}
       marginLeft={"1em"}
       aria-label={BlockLabels.ArgumentSlot}
-    ></Box>
+    >
+      {blockProps ? <Block {...blockProps} /> : null}
+    </Box>
   );
 }

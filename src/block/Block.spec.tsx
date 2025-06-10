@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, expect, it } from "vitest";
+import { beforeEach, expect, it } from "vitest";
 import { render, type RenderResult } from "@testing-library/react";
 import { Block } from "./Block.tsx";
 import { BlockLabels } from "./aria-labels.ts";
@@ -10,7 +10,7 @@ describe("Block component", () => {
 
   beforeEach(() => {
     renderResult = render(
-      <Block name={testName} arguments={{ amount: argumentAmt }} />,
+      <Block name={testName} argumentOptions={{ minAmount: argumentAmt }} />,
     );
   });
 

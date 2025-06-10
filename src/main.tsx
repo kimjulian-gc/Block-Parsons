@@ -8,4 +8,6 @@ function throwNull(message: string): never {
 const root =
   document.getElementById("root") ?? throwNull("React root cannot be null!");
 
-createRoot(root).render(<Block name={"Test"} />);
+createRoot(root).render(
+  <Block name={"test"} argumentOptions={{ minAmount: 3 }} />,
+);

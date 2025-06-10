@@ -1,16 +1,20 @@
 import { Box } from "@mui/material";
+import { useState } from "react";
+import { ArgumentSlot } from "./ArgumentSlot.tsx";
 
 interface ArgumentOptions {
-  amount: number;
+  minAmount: number;
   expandable?: boolean;
 }
 
 interface BlockProps {
   name: string;
-  arguments: ArgumentOptions;
+  argumentOptions: ArgumentOptions;
 }
 
-export function Block({ name, arguments: { amount } }: BlockProps) {
+export function Block({ name, argumentOptions: { minAmount } }: BlockProps) {
+  const [args] = useState<null[]>(Array.from({ length: minAmount }));
+
   return (
     <Box
       width={"fit-content"}
@@ -19,7 +23,11 @@ export function Block({ name, arguments: { amount } }: BlockProps) {
       borderRadius={"0.5em"}
       fontFamily={"monospace"}
     >
-      ({name})
+      ({name}
+      {args.map((_, index) => (
+        <ArgumentSlot key={index} />
+      ))}
+      )
     </Box>
   );
 }

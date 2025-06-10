@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useState } from "react";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
 
@@ -16,18 +16,25 @@ export function Block({ name, argumentOptions: { minAmount } }: BlockProps) {
   const [args] = useState<null[]>(Array.from({ length: minAmount }));
 
   return (
-    <Box
+    <Stack
       width={"fit-content"}
       bgcolor={"lightgray"}
       padding={"0.5em"}
       borderRadius={"0.5em"}
       fontFamily={"monospace"}
+      spacing={1}
+      useFlexGap
     >
       ({name}
-      {args.map((_, index) => (
-        <ArgumentSlot key={index} />
-      ))}
-      )
-    </Box>
+      {args.map((_, index) =>
+        index === args.length - 1 ? (
+          <Stack direction={"row"} alignItems={"center"} key={index}>
+            <ArgumentSlot />)
+          </Stack>
+        ) : (
+          <ArgumentSlot key={index} />
+        ),
+      )}
+    </Stack>
   );
 }

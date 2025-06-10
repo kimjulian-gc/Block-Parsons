@@ -6,12 +6,13 @@ import { BlockLabels } from "./aria-labels.ts";
 describe("Block component", () => {
   const testName = "Block component renders passed name prop";
   const argumentAmt = 3;
+  const mainTestBlock = (
+    <Block name={testName} argumentOptions={{ minAmount: argumentAmt }} />
+  );
   let renderResult: RenderResult;
 
   beforeEach(() => {
-    renderResult = render(
-      <Block name={testName} argumentOptions={{ minAmount: argumentAmt }} />,
-    );
+    renderResult = render(mainTestBlock);
   });
 
   it("renders passed name prop", () => {

@@ -15,7 +15,7 @@ export default defineConfig({
   },
   // below is necessary to avoid React using process,
   // see the Environment Variables box under https://vite.dev/guide/build#css-support
-  define: { "process.env.NODE_ENV": '"production"' },
+  define: { "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV) },
   test: {
     environment: "jsdom",
     globals: true,

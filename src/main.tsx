@@ -1,5 +1,5 @@
 import { createRoot } from "react-dom/client";
-import { Block } from "./Block.tsx";
+import { Block } from "./block/Block.tsx";
 
 function throwNull(message: string): never {
   throw new Error(message);

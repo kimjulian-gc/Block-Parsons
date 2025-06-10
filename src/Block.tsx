@@ -5,5 +5,15 @@ interface BlockProps {
 }
 
 export function Block({ name }: BlockProps) {
-  return <Box>{name}</Box>;
+  return (
+    <Box
+      width={"fit-content"}
+      bgcolor={"lightgray"}
+      padding={"0.5em"}
+      borderRadius={"0.5em"}
+      fontFamily={"monospace"}
+    >
+      ({name})
+    </Box>
+  );
 }

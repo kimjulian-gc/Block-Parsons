@@ -7,6 +7,6 @@ describe("Block component", () => {
   it.concurrent("renders passed name prop", () => {
     const testName = "Block component renders passed name prop";
     render(<Block name={testName} />);
-    expect(screen.getByText(testName)).toBeInTheDocument();
+    expect(screen.getByText(new RegExp(testName))).toBeInTheDocument();
   });
 });

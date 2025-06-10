@@ -1,10 +1,16 @@
 import { Box } from "@mui/material";
 
-interface BlockProps {
-  name: string;
+interface ArgumentOptions {
+  amount: number;
+  expandable?: boolean;
 }
 
-export function Block({ name }: BlockProps) {
+interface BlockProps {
+  name: string;
+  arguments: ArgumentOptions;
+}
+
+export function Block({ name, arguments: { amount } }: BlockProps) {
   return (
     <Box
       width={"fit-content"}

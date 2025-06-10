@@ -9,15 +9,21 @@ const root =
   document.getElementById("root") ?? throwNull("React root cannot be null!");
 
 const blocks = [
-  { name: "child1", argumentOptions: { minAmount: 1 } },
-  { name: "child2", argumentOptions: { minAmount: 2 } },
-  { name: "child3", argumentOptions: { minAmount: 3 } },
+  { name: "small-grey", argumentOptions: { minAmount: 0 } },
+  {
+    name: "solid-circle",
+    argumentOptions: { minAmount: 2 },
+    childBlocks: [
+      { name: "20", argumentOptions: { minAmount: 0 } },
+      { name: '"red"', argumentOptions: { minAmount: 0 } },
+    ],
+  },
 ];
 
 createRoot(root).render(
   <Block
-    name={"test"}
-    argumentOptions={{ minAmount: 3 }}
+    name={"define"}
+    argumentOptions={{ minAmount: 2 }}
     childBlocks={blocks}
   />,
 );

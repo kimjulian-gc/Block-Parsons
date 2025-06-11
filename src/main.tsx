@@ -13,10 +13,7 @@ const blocks = [
   {
     name: "solid-circle",
     argumentOptions: { minAmount: 2 },
-    childBlocks: [
-      { name: "20", argumentOptions: { minAmount: 0 } },
-      { name: '"red"', argumentOptions: { minAmount: 0 } },
-    ],
+    childBlocks: [{ name: "20" }, { name: '"red"' }],
   },
 ];
 

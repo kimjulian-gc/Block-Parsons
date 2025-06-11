@@ -35,6 +35,7 @@ describe("Block component", () => {
       />,
     );
 
+    expect(renderResult.getByText(new RegExp(testName2))).toBeInTheDocument();
     expect(renderResult.getByText(new RegExp(testName))).toBeInTheDocument();
   });
 });

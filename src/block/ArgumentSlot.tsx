@@ -10,7 +10,7 @@ export function ArgumentSlot({ blockProps }: ArgumentSlotProps) {
   return (
     <Box
       width={"fit-content"}
-      minWidth={"3em"}
+      minWidth={"2em"}
       minHeight={"0.25em"}
       bgcolor={"white"}
       padding={"0.5em"}

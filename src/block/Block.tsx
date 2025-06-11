@@ -9,17 +9,15 @@ interface ArgumentOptions {
 
 export interface BlockProps {
   name: string;
-  argumentOptions: ArgumentOptions;
+  argumentOptions?: ArgumentOptions;
   // TODO: i don't like this implementation of child
   //  blocks, ideally i'd like child elements
   childBlocks?: BlockProps[];
 }
 
-export function Block({
-  name,
-  argumentOptions: { minAmount },
-  childBlocks,
-}: BlockProps) {
+export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
+  const { minAmount } = argumentOptions ?? { minAmount: 0 };
+  const isConstant = minAmount === 0;
   const [args] = useState<(BlockProps | undefined)[]>(() => {
     if (!childBlocks) {
       return Array.from({ length: minAmount });
@@ -35,19 +33,22 @@ export function Block({
   return (
     <Stack
       width={"fit-content"}
-      bgcolor={"lightgray"}
+      bgcolor={isConstant ? "lightgreen" : "lightgray"}
       padding={"0.5em"}
       borderRadius={"0.5em"}
       fontFamily={"monospace"}
       spacing={1}
       useFlexGap
     >
-      ({name}
+      {isConstant ? null : "("}
+      {name}
       {args.map((blockProps, index) =>
         index === args.length - 1 ? (
           <Stack direction={"row"} alignItems={"flex-end"} key={index}>
             <ArgumentSlot blockProps={blockProps} />{" "}
-            <Box marginLeft={"0.25em"}>)</Box>
+            <Box marginLeft={"0.25em"} marginBottom={"1em"}>
+              )
+            </Box>
           </Stack>
         ) : (
           <ArgumentSlot blockProps={blockProps} key={index} />

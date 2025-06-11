@@ -4,6 +4,7 @@ import { ArgumentSlot } from "./ArgumentSlot.tsx";
 
 interface ArgumentOptions {
   minAmount: number;
+  // TODO: implement expandable argument slots
   expandable?: boolean;
 }
 

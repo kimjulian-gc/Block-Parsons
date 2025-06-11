@@ -9,7 +9,7 @@ const root =
   document.getElementById("root") ?? throwNull("React root cannot be null!");
 
 const blocks = [
-  { name: "small-grey", argumentOptions: { minAmount: 0 } },
+  { name: "small-grey" },
   {
     name: "solid-circle",
     argumentOptions: { minAmount: 2 },

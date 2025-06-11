@@ -47,7 +47,10 @@ export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
         index === args.length - 1 ? (
           <Stack direction={"row"} alignItems={"flex-end"} key={index}>
             <ArgumentSlot blockProps={blockProps} />{" "}
-            <Box marginLeft={"0.25em"} marginBottom={"1em"}>
+            <Box
+              marginLeft={"0.25em"}
+              {...(blockProps ? { marginBottom: "1em" } : null)}
+            >
               )
             </Box>
           </Stack>

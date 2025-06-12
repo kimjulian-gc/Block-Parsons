@@ -1,6 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { Block } from "./block/Block.tsx";
-import { DndContext } from "@dnd-kit/core";
+import { DndContext, pointerWithin, rectIntersection } from "@dnd-kit/core";
 
 function throwNull(message: string): never {
   throw new Error(message);
@@ -19,7 +19,16 @@ const blocks = [
 ];
 
 createRoot(root).render(
-  <DndContext>
+  <DndContext
+    collisionDetection={(args) => {
+      const pointerCollisions = pointerWithin(args);
+
+      if (pointerCollisions.length > 0) {
+        return pointerCollisions;
+      }
+      return rectIntersection(args);
+    }}
+  >
     <Block
       name={"define"}
       argumentOptions={{ minAmount: 2 }}

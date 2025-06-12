@@ -59,7 +59,10 @@ export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
       {args.map((blockProps, index) =>
         index === args.length - 1 ? (
           <Stack direction={"row"} alignItems={"flex-end"} key={index}>
-            <ArgumentSlot blockProps={blockProps} />{" "}
+            <ArgumentSlot
+              idSuffix={`${name}-${index.toString()}`}
+              blockProps={blockProps}
+            />{" "}
             <Box
               marginLeft={"0.25em"}
               {...(blockProps ? { marginBottom: "1em" } : null)}
@@ -68,7 +71,11 @@ export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
             </Box>
           </Stack>
         ) : (
-          <ArgumentSlot blockProps={blockProps} key={index} />
+          <ArgumentSlot
+            idSuffix={`${name}-${index.toString()}`}
+            blockProps={blockProps}
+            key={index}
+          />
         ),
       )}
     </Stack>

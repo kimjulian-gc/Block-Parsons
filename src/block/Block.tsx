@@ -1,5 +1,4 @@
 import { Box, Stack } from "@mui/material";
-import { useState } from "react";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
@@ -16,7 +15,7 @@ export interface BlockProps {
   argumentOptions?: ArgumentOptions;
   // TODO: i don't like this implementation of child
   //  blocks, ideally i'd like child elements
-  childBlocks?: BlockProps[];
+  childBlocks?: (BlockProps | undefined)[];
 }
 
 export function Block({ id, name, argumentOptions, childBlocks }: BlockProps) {
@@ -31,7 +30,7 @@ export function Block({ id, name, argumentOptions, childBlocks }: BlockProps) {
   });
   const dragTransform = CSS.Translate.toString(transform);
   const isConstant = minAmount === 0;
-  const [args] = useState<(BlockProps | undefined)[]>(() => {
+  const args = ((): (BlockProps | undefined)[] => {
     if (!childBlocks) {
       return Array.from({ length: minAmount });
     }
@@ -41,7 +40,7 @@ export function Block({ id, name, argumentOptions, childBlocks }: BlockProps) {
     return childBlocks.concat(
       Array.from({ length: minAmount - childBlocks.length }),
     );
-  });
+  })();
   // console.log(name, argumentOptions,args)
 
   return (
@@ -68,6 +67,7 @@ export function Block({ id, name, argumentOptions, childBlocks }: BlockProps) {
             <ArgumentSlot
               idSuffix={`${name}-${index.toString()}`}
               blockProps={blockProps}
+              parentId={id}
             />{" "}
             <Box
               marginLeft={"0.25em"}
@@ -81,6 +81,7 @@ export function Block({ id, name, argumentOptions, childBlocks }: BlockProps) {
             idSuffix={`${name}-${index.toString()}`}
             blockProps={blockProps}
             key={index}
+            parentId={id}
           />
         ),
       )}

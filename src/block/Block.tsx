@@ -3,7 +3,6 @@ import { useState } from "react";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import type { UUID } from "node:crypto";
 
 interface ArgumentOptions {
   minAmount: number;
@@ -12,7 +11,7 @@ interface ArgumentOptions {
 }
 
 export interface BlockProps {
-  id: UUID;
+  id: string;
   name: string;
   argumentOptions?: ArgumentOptions;
   // TODO: i don't like this implementation of child

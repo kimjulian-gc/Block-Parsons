@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { Block } from "./block/Block.tsx";
+import { DndContext } from "@dnd-kit/core";
 
 function throwNull(message: string): never {
   throw new Error(message);
@@ -18,9 +19,11 @@ const blocks = [
 ];
 
 createRoot(root).render(
-  <Block
-    name={"define"}
-    argumentOptions={{ minAmount: 2 }}
-    childBlocks={blocks}
-  />,
+  <DndContext>
+    <Block
+      name={"define"}
+      argumentOptions={{ minAmount: 2 }}
+      childBlocks={blocks}
+    />
+  </DndContext>,
 );

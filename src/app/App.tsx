@@ -1,12 +1,14 @@
 import {
   type CollisionDetection,
   DndContext,
+  type DragEndEvent,
   pointerWithin,
   rectIntersection,
 } from "@dnd-kit/core";
 import { Block, type BlockProps } from "../block/Block.tsx";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { findChild, removedAndPushed, throwNull } from "./app-utils.ts";
 
 const startingBlocks: BlockProps[] = [
   {
@@ -29,9 +31,11 @@ const startingBlocks: BlockProps[] = [
 ];
 
 export function App() {
-  const [topLevelBlocks] = useState<BlockProps[]>(startingBlocks);
+  const [topLevelBlocks, setTopLevelBlocks] =
+    useState<BlockProps[]>(startingBlocks);
 
   const collisionDetection: CollisionDetection = (args) => {
+    // TODO: add drag overlay to avoid setting self as own child
     const pointerCollisions = pointerWithin(args);
 
     if (pointerCollisions.length > 0) {
@@ -40,10 +44,27 @@ export function App() {
     return rectIntersection(args);
   };
 
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    // 1. find the original parent block,
+    // 2. remove the active block from the original parent, and
+    // 3. push to its new parent's child blocks
+    // TODO: terrible DFS-based implementation,
+    //  ideally we'd use a hash map over the uuids
+    const child =
+      findChild(topLevelBlocks, active.id.toString()) ??
+      throwNull("child was somehow not found?");
+    const newParent = over?.id.toString().split(";")[1] ?? null;
+    const newTopLevel = removedAndPushed(topLevelBlocks, child, newParent);
+    setTopLevelBlocks(newTopLevel);
+  };
+
   return (
-    <DndContext collisionDetection={collisionDetection}>
-      {topLevelBlocks.map((blockProps, index) => (
-        <Block {...blockProps} key={index} />
+    <DndContext
+      collisionDetection={collisionDetection}
+      onDragEnd={handleDragEnd}
+    >
+      {topLevelBlocks.map((block) => (
+        <Block {...block} key={block.id} />
       ))}
     </DndContext>
   );

@@ -1,9 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { App } from "./app/App.tsx";
-
-function throwNull(message: string): never {
-  throw new Error(message);
-}
+import { throwNull } from "./app/app-utils.ts";
 
 const root =
   document.getElementById("root") ?? throwNull("React root cannot be null!");

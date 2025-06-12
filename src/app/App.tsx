@@ -4,17 +4,32 @@ import {
   pointerWithin,
   rectIntersection,
 } from "@dnd-kit/core";
-import { Block } from "../block/Block.tsx";
+import { Block, type BlockProps } from "../block/Block.tsx";
+import { useState } from "react";
+import { randomUUID } from "node:crypto";
+
+const startingBlocks: BlockProps[] = [
+  {
+    id: randomUUID(),
+    name: "define",
+    argumentOptions: { minAmount: 2 },
+    childBlocks: [
+      { id: randomUUID(), name: "small-grey" },
+      {
+        id: randomUUID(),
+        name: "solid-circle",
+        argumentOptions: { minAmount: 2 },
+        childBlocks: [
+          { id: randomUUID(), name: "20" },
+          { id: randomUUID(), name: '"red"' },
+        ],
+      },
+    ],
+  },
+];
 
 export function App() {
-  const blocks = [
-    { name: "small-grey" },
-    {
-      name: "solid-circle",
-      argumentOptions: { minAmount: 2 },
-      childBlocks: [{ name: "20" }, { name: '"red"' }],
-    },
-  ];
+  const [topLevelBlocks] = useState<BlockProps[]>(startingBlocks);
 
   const collisionDetection: CollisionDetection = (args) => {
     const pointerCollisions = pointerWithin(args);
@@ -27,11 +42,9 @@ export function App() {
 
   return (
     <DndContext collisionDetection={collisionDetection}>
-      <Block
-        name={"define"}
-        argumentOptions={{ minAmount: 2 }}
-        childBlocks={blocks}
-      />
+      {topLevelBlocks.map((blockProps, index) => (
+        <Block {...blockProps} key={index} />
+      ))}
     </DndContext>
   );
 }

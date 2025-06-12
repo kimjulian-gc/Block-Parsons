@@ -3,6 +3,7 @@ import { useState } from "react";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
+import type { UUID } from "node:crypto";
 
 interface ArgumentOptions {
   minAmount: number;
@@ -11,6 +12,7 @@ interface ArgumentOptions {
 }
 
 export interface BlockProps {
+  id: UUID;
   name: string;
   argumentOptions?: ArgumentOptions;
   // TODO: i don't like this implementation of child
@@ -18,9 +20,9 @@ export interface BlockProps {
   childBlocks?: BlockProps[];
 }
 
-export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
+export function Block({ id, name, argumentOptions, childBlocks }: BlockProps) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id: `${name}-block`,
+    id,
   });
   const dragTransform = CSS.Translate.toString(transform);
 

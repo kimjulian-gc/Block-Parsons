@@ -1,4 +1,9 @@
-import { DndContext, pointerWithin, rectIntersection } from "@dnd-kit/core";
+import {
+  type CollisionDetection,
+  DndContext,
+  pointerWithin,
+  rectIntersection,
+} from "@dnd-kit/core";
 import { Block } from "../block/Block.tsx";
 
 export function App() {
@@ -11,17 +16,17 @@ export function App() {
     },
   ];
 
-  return (
-    <DndContext
-      collisionDetection={(args) => {
-        const pointerCollisions = pointerWithin(args);
+  const collisionDetection: CollisionDetection = (args) => {
+    const pointerCollisions = pointerWithin(args);
 
-        if (pointerCollisions.length > 0) {
-          return pointerCollisions;
-        }
-        return rectIntersection(args);
-      }}
-    >
+    if (pointerCollisions.length > 0) {
+      return pointerCollisions;
+    }
+    return rectIntersection(args);
+  };
+
+  return (
+    <DndContext collisionDetection={collisionDetection}>
       <Block
         name={"define"}
         argumentOptions={{ minAmount: 2 }}

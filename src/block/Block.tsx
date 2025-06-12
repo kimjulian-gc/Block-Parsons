@@ -1,6 +1,8 @@
 import { Box, Stack } from "@mui/material";
 import { useState } from "react";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 
 interface ArgumentOptions {
   minAmount: number;
@@ -23,6 +25,11 @@ export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
   const expandable = argumentOptions?.expandable ?? false;
   // if a block is expandable, leave
   const minAmount = expandable ? minBase + 1 : minBase;
+
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: `${name}-block`,
+  });
+  const dragTransform = CSS.Translate.toString(transform);
   const isConstant = minAmount === 0;
   const [args] = useState<(BlockProps | undefined)[]>(() => {
     if (!childBlocks) {
@@ -46,6 +53,12 @@ export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
       fontFamily={"monospace"}
       spacing={1}
       useFlexGap
+      ref={setNodeRef}
+      sx={{
+        transform: dragTransform,
+      }}
+      {...listeners}
+      {...attributes}
     >
       {isConstant ? null : "("}
       {name}

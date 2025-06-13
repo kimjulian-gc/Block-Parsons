@@ -9,6 +9,7 @@ import { Block, type BlockProps } from "../block/Block.tsx";
 import { useState } from "react";
 import { findChild, removedAndPushed } from "./app-utils.ts";
 import { newUUID, throwNull } from "../common/utils.ts";
+import { Draggable } from "../block/dnd/Draggable.tsx";
 
 const startingBlocks: BlockProps[] = [
   {
@@ -71,7 +72,9 @@ export function SolutionBox() {
       onDragEnd={handleDragEnd}
     >
       {topLevelBlocks.map((block) => (
-        <Block {...block} key={block.id} />
+        <Draggable id={block.id} key={block.id}>
+          <Block {...block} key={block.id} />
+        </Draggable>
       ))}
     </DndContext>
   );

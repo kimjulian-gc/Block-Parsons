@@ -5,17 +5,12 @@ import { useDroppable } from "@dnd-kit/core";
 
 interface ArgumentSlotProps {
   idSuffix: string;
-  parentId: string;
   blockProps?: BlockProps;
 }
 
-export function ArgumentSlot({
-  idSuffix,
-  blockProps,
-  parentId,
-}: ArgumentSlotProps) {
+export function ArgumentSlot({ idSuffix, blockProps }: ArgumentSlotProps) {
   const { isOver, setNodeRef } = useDroppable({
-    id: `argument-slot-${idSuffix};${parentId}`,
+    id: `argument-slot-${idSuffix}`,
   });
 
   return (

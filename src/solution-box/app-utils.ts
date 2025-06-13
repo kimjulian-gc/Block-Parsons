@@ -1,9 +1,5 @@
 import type { BlockProps } from "../block/Block.tsx";
 
-export function throwNull(message: string): never {
-  throw new Error(message);
-}
-
 interface StackNode {
   block: BlockProps;
   visited: boolean;

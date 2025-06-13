@@ -7,30 +7,30 @@ import {
 } from "@dnd-kit/core";
 import { Block, type BlockProps } from "../block/Block.tsx";
 import { useState } from "react";
-import { v4 as uuidv4 } from "uuid";
-import { findChild, removedAndPushed, throwNull } from "./app-utils.ts";
+import { findChild, removedAndPushed } from "./app-utils.ts";
+import { newUUID, throwNull } from "../common/utils.ts";
 
 const startingBlocks: BlockProps[] = [
   {
-    id: uuidv4(),
+    id: newUUID(),
     name: "define",
     argumentOptions: { minAmount: 2 },
     childBlocks: [
-      { id: uuidv4(), name: "small-grey" },
+      { id: newUUID(), name: "small-grey" },
       {
-        id: uuidv4(),
+        id: newUUID(),
         name: "solid-circle",
         argumentOptions: { minAmount: 2 },
         childBlocks: [
-          { id: uuidv4(), name: "20" },
-          { id: uuidv4(), name: '"red"' },
+          { id: newUUID(), name: "20" },
+          { id: newUUID(), name: '"red"' },
         ],
       },
     ],
   },
 ];
 
-export function App() {
+export function SolutionBox() {
   const [topLevelBlocks, setTopLevelBlocks] =
     useState<BlockProps[]>(startingBlocks);
 

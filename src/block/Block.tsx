@@ -17,7 +17,9 @@ export interface BlockProps {
 }
 
 export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
-  const { minAmount } = argumentOptions ?? { minAmount: 0 };
+  const minBase = argumentOptions?.minAmount ?? 0;
+  const expandable = argumentOptions?.expandable ?? false;
+  const minAmount = expandable ? minBase + 1 : minBase;
   const isConstant = minAmount === 0;
   const [args] = useState<(BlockProps | undefined)[]>(() => {
     if (!childBlocks) {

@@ -12,7 +12,7 @@ const blocks = [
   { name: "small-grey" },
   {
     name: "solid-circle",
-    argumentOptions: { minAmount: 2 },
+    argumentOptions: { minAmount: 2, expandable: true },
     childBlocks: [{ name: "20" }, { name: '"red"' }],
   },
 ];

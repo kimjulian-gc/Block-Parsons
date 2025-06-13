@@ -53,8 +53,15 @@ export function App() {
     const child =
       findChild(topLevelBlocks, active.id.toString()) ??
       throwNull("child was somehow not found?");
-    const newParent = over?.id.toString().split(";")[1] ?? null;
-    const newTopLevel = removedAndPushed(topLevelBlocks, child, newParent);
+    const parentSlotDetails = over?.id.toString().split(":") ?? null;
+    const newParent = parentSlotDetails?.[1] ?? null;
+    const argumentSlot = parentSlotDetails?.[2] ?? null;
+    const newTopLevel = removedAndPushed(
+      topLevelBlocks,
+      child,
+      newParent,
+      Number(argumentSlot),
+    );
     setTopLevelBlocks(newTopLevel);
   };
 

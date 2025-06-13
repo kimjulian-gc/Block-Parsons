@@ -61,14 +61,11 @@ export function Block({ id, name, argumentOptions, childBlocks }: BlockProps) {
     >
       {isConstant ? null : "("}
       {name}
-      {args.map((blockProps, index) =>
-        index === args.length - 1 ? (
+      {args.map((blockProps, index) => {
+        const idSuffix = `${name}:${id}:${index.toString()}`;
+        return index === args.length - 1 ? (
           <Stack direction={"row"} alignItems={"flex-end"} key={index}>
-            <ArgumentSlot
-              idSuffix={`${name}-${index.toString()}`}
-              blockProps={blockProps}
-              parentId={id}
-            />{" "}
+            <ArgumentSlot idSuffix={idSuffix} blockProps={blockProps} />{" "}
             <Box
               marginLeft={"0.25em"}
               {...(blockProps ? { marginBottom: "1em" } : null)}
@@ -78,13 +75,12 @@ export function Block({ id, name, argumentOptions, childBlocks }: BlockProps) {
           </Stack>
         ) : (
           <ArgumentSlot
-            idSuffix={`${name}-${index.toString()}`}
+            idSuffix={idSuffix}
             blockProps={blockProps}
             key={index}
-            parentId={id}
           />
-        ),
-      )}
+        );
+      })}
     </Stack>
   );
 }

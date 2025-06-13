@@ -56,13 +56,15 @@ export function removedAndPushed(
   newParentId: string | null,
   argumentSlot: number,
 ): BlockProps[] {
+  console.log("looking for", newParentId);
   const copy = structuredClone(topLevelBlocks);
   const instantRemove = copy.find((block) => block.id === child.id);
   if (instantRemove) {
     // console.log("found top level, removed");
-    const indexToRemove = copy.findIndex((block) => block.id === newParentId);
+    const indexToRemove = copy.findIndex((block) => block.id === child.id);
     copy.splice(indexToRemove, 1);
   }
+  console.log("copy after potential remove", structuredClone(copy));
   const stack: StackNode[] = [];
   copy.forEach((block) => {
     stack.push({
@@ -72,18 +74,15 @@ export function removedAndPushed(
   });
 
   let parent: BlockProps | undefined;
+  let oldParent: { block: BlockProps; i: number } | undefined;
   // remove child and find parent
-  for (
-    let poppedNode = stack.pop();
-    !instantRemove && poppedNode;
-    poppedNode = stack.pop()
-  ) {
+  for (let poppedNode = stack.pop(); poppedNode; poppedNode = stack.pop()) {
     if (poppedNode.visited) {
       continue;
     }
 
     poppedNode.visited = true;
-    // console.log("visited ", poppedNode.block.name);
+    console.log("visited", poppedNode.block.name);
     const block = poppedNode.block;
 
     if (block.id === newParentId) {
@@ -103,6 +102,7 @@ export function removedAndPushed(
       if (childBlock.id === child.id) {
         // remove from original parent
         // console.log("REMOVED!");
+        oldParent = { block: block, i: i };
         block.childBlocks.splice(i, 1);
         i--;
         continue;
@@ -118,17 +118,34 @@ export function removedAndPushed(
     // TODO: need to be able to top level drop in place
     copy.push(child);
   } else if (parent) {
-    console.log("found a parent, pushing to ", argumentSlot);
+    // console.log("found a parent, pushing to", argumentSlot);
     if (!parent.childBlocks) {
       parent.childBlocks = [];
     }
-    // TODO: implement swapping
-    parent.childBlocks.splice(argumentSlot, 0, child);
+    const temp = parent.childBlocks[argumentSlot];
+    if (oldParent?.block.id === parent.id || !temp) {
+      // no swap necessary since we either:
+      // 1. deleted already or
+      // 2. there's nothing at the destination
+      parent.childBlocks.splice(argumentSlot, 0, child);
+    } else {
+      // swap the two
+      parent.childBlocks[argumentSlot] = child;
+      if (oldParent && oldParent.block.childBlocks) {
+        const { i } = oldParent;
+        // remember we deleted already!
+        oldParent.block.childBlocks.splice(i, 0, temp);
+      } else {
+        // oldParent was top level
+        // TODO: push for now until top level drop in place
+        copy.push(temp);
+      }
+    }
   } else {
     throw new Error("no parent?");
   }
 
-  console.log(copy);
+  // console.log(copy);
 
   return copy;
 }

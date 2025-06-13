@@ -2,6 +2,7 @@ import { BlockLabels } from "./aria-labels.ts";
 import { Box } from "@mui/material";
 import { Block, type BlockProps } from "./Block.tsx";
 import { useDroppable } from "@dnd-kit/core";
+import { Draggable } from "./dnd/Draggable.tsx";
 
 interface ArgumentSlotProps {
   idSuffix: string;
@@ -26,7 +27,11 @@ export function ArgumentSlot({ idSuffix, blockProps }: ArgumentSlotProps) {
       ref={setNodeRef}
       {...(isOver ? { boxShadow: "inset 0 0 0 0.25em lightgreen" } : null)}
     >
-      {blockProps ? <Block {...blockProps} /> : null}
+      {blockProps ? (
+        <Draggable id={blockProps.id}>
+          <Block {...blockProps} />{" "}
+        </Draggable>
+      ) : null}
     </Box>
   );
 }

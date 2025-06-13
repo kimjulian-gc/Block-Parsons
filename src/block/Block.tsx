@@ -1,7 +1,5 @@
 import { Box, Stack } from "@mui/material";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
-import { useDraggable } from "@dnd-kit/core";
-import { CSS } from "@dnd-kit/utilities";
 import { newUUID } from "../common/utils.ts";
 
 interface ArgumentOptions {
@@ -11,7 +9,7 @@ interface ArgumentOptions {
 }
 
 export interface BlockProps {
-  id?: string;
+  id: string;
   name: string;
   argumentOptions?: ArgumentOptions;
   // TODO: i don't like this implementation of child
@@ -31,10 +29,6 @@ export function Block({
   const expandable = argumentOptions?.expandable ?? false;
   // if a block is expandable, leave
   const minAmount = expandable ? minBase + 1 : minBase;
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
-    id,
-  });
-  const dragTransform = CSS.Translate.toString(transform);
   const isConstant = minAmount === 0;
   const args = ((): (BlockProps | undefined)[] => {
     if (!childBlocks) {
@@ -58,12 +52,6 @@ export function Block({
       fontFamily={"monospace"}
       spacing={1}
       useFlexGap
-      ref={setNodeRef}
-      sx={{
-        transform: dragTransform,
-      }}
-      {...listeners}
-      {...attributes}
     >
       {isConstant ? null : "("}
       {name}

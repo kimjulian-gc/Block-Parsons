@@ -2,6 +2,7 @@ import { Box, Stack } from "@mui/material";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
+import { newUUID } from "../common/utils.ts";
 
 interface ArgumentOptions {
   minAmount: number;
@@ -10,7 +11,7 @@ interface ArgumentOptions {
 }
 
 export interface BlockProps {
-  id: string;
+  id?: string;
   name: string;
   argumentOptions?: ArgumentOptions;
   // TODO: i don't like this implementation of child
@@ -18,7 +19,12 @@ export interface BlockProps {
   childBlocks?: (BlockProps | undefined)[];
 }
 
-export function Block({ id, name, argumentOptions, childBlocks }: BlockProps) {
+export function Block({
+  id = newUUID(),
+  name,
+  argumentOptions,
+  childBlocks,
+}: BlockProps) {
   // minBase is min number of arguments
   const minBase = argumentOptions?.minAmount ?? 0;
   // check if a block is expandable

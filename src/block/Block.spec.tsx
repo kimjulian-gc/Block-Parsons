@@ -2,12 +2,17 @@ import { beforeEach, expect, it } from "vitest";
 import { render, type RenderResult } from "@testing-library/react";
 import { Block } from "./Block.tsx";
 import { BlockLabels } from "./aria-labels.ts";
+import { newUUID } from "../common/utils.ts";
 
 describe("Block component", () => {
   const testName = "Block component test block";
   const argumentAmt = 3;
   const testBlock1 = (
-    <Block name={testName} argumentOptions={{ minAmount: argumentAmt }} />
+    <Block
+      id={newUUID()}
+      name={testName}
+      argumentOptions={{ minAmount: argumentAmt }}
+    />
   );
   let renderResult: RenderResult;
 
@@ -29,6 +34,7 @@ describe("Block component", () => {
     renderResult.unmount();
     renderResult = render(
       <Block
+        id={newUUID()}
         name={testName2}
         argumentOptions={{ minAmount: argumentAmt }}
         childBlocks={[testBlock1.props]}

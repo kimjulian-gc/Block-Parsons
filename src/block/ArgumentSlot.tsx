@@ -24,7 +24,7 @@ export function ArgumentSlot({ idSuffix, blockProps }: ArgumentSlotProps) {
       marginLeft={"1em"}
       aria-label={BlockLabels.ArgumentSlot}
       ref={setNodeRef}
-      {...(isOver ? { border: "solid lightgreen" } : null)}
+      {...(isOver ? { boxShadow: "inset 0 0 0 0.25em lightgreen" } : null)}
     >
       {blockProps ? <Block {...blockProps} /> : null}
     </Box>

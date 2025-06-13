@@ -56,7 +56,7 @@ export function removedAndPushed(
   newParentId: string | null,
   argumentSlot: number,
 ): BlockProps[] {
-  console.log("looking for", newParentId);
+  // console.log("looking for", newParentId);
   const copy = structuredClone(topLevelBlocks);
   const instantRemove = copy.find((block) => block.id === child.id);
   if (instantRemove) {
@@ -64,7 +64,7 @@ export function removedAndPushed(
     const indexToRemove = copy.findIndex((block) => block.id === child.id);
     copy.splice(indexToRemove, 1);
   }
-  console.log("copy after potential remove", structuredClone(copy));
+  // console.log("copy after potential remove", structuredClone(copy));
   const stack: StackNode[] = [];
   copy.forEach((block) => {
     stack.push({
@@ -82,7 +82,7 @@ export function removedAndPushed(
     }
 
     poppedNode.visited = true;
-    console.log("visited", poppedNode.block.name);
+    // console.log("visited", poppedNode.block.name);
     const block = poppedNode.block;
 
     if (block.id === newParentId) {
@@ -114,11 +114,16 @@ export function removedAndPushed(
     }
   }
 
-  if (!newParentId) {
-    // TODO: need to be able to top level drop in place
-    copy.push(child);
-  } else if (parent) {
-    // console.log("found a parent, pushing to", argumentSlot);
+  function pushChild() {
+    if (!newParentId) {
+      // TODO: need to be able to top level drop in place
+      copy.push(child);
+      return;
+    }
+    if (!parent) {
+      throw new Error("no parent?");
+    }
+
     if (!parent.childBlocks) {
       parent.childBlocks = [];
     }
@@ -128,24 +133,30 @@ export function removedAndPushed(
       // 1. deleted already or
       // 2. there's nothing at the destination
       parent.childBlocks.splice(argumentSlot, 0, child);
-    } else {
-      // swap the two
-      parent.childBlocks[argumentSlot] = child;
-      if (oldParent && oldParent.block.childBlocks) {
-        const { i } = oldParent;
-        // remember we deleted already!
-        oldParent.block.childBlocks.splice(i, 0, temp);
-      } else {
-        // oldParent was top level
-        // TODO: push for now until top level drop in place
-        copy.push(temp);
-      }
+      return;
     }
-  } else {
-    throw new Error("no parent?");
+    console.warn("swap necessary");
+    if (oldParent && temp.id === oldParent.block.id) {
+      // notice it's impossible to swap if temp is our old parent,
+      // so undo the deletion and don't swap
+      const { block, i } = oldParent;
+      block.childBlocks?.splice(i, 0, child);
+      return;
+    }
+    // swap the two
+    parent.childBlocks[argumentSlot] = child;
+    if (!oldParent || !oldParent.block.childBlocks) {
+      // oldParent was top level
+      // TODO: push for now until top level drop in place
+      copy.push(temp);
+      return;
+    }
+    const { i } = oldParent;
+    // remember we deleted already!
+    oldParent.block.childBlocks.splice(i, 0, temp);
   }
 
-  // console.log(copy);
+  pushChild();
 
   return copy;
 }

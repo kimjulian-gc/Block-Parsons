@@ -1,8 +1,7 @@
-import { Box,Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 // import { useState } from "react";
 // import { ArgumentSlot } from "./ArgumentSlot.tsx";
 import { Block } from "./Block.tsx";
-
 
 const blocks = [
   { name: "small-circle", argumentOptions: { minAmount: 3 } },
@@ -12,7 +11,6 @@ const blocks = [
   { name: "square", argumentOptions: { minAmount: 0 } },
 ];
 
-
 export function BlockLibrary() {
   return (
     <Stack direction="row" spacing={10}>
@@ -20,23 +18,23 @@ export function BlockLibrary() {
         <Typography variant="h6" gutterBottom>
           Library Box
         </Typography>
-      <Box
-        border={"2px solid black"}
-        borderRadius={"0.5em"}
-        padding={"1em"}
-        width={"fit-content"}
-        aria-label="Block Library"
-      >
-        {blocks.map((block, index) => (
-          <Box key={index} data-testid="Block" mt={index > 0 ? 2 : 0}>
-            <Block
-              name={block.name}
-              argumentOptions={block.argumentOptions}
-              aria-label={`Block ${block.name}`}
-            />
-          </Box>
-        ))}
-      </Box>
+        <Box
+          border={"2px solid black"}
+          borderRadius={"0.5em"}
+          padding={"1em"}
+          width={"fit-content"}
+          aria-label="Block Library"
+        >
+          {blocks.map((block, index) => (
+            <Box key={index} mt={index > 0 ? 2 : 0}>
+              <Block
+                name={block.name}
+                argumentOptions={block.argumentOptions}
+                aria-label={`Block ${block.name}`}
+              />
+            </Box>
+          ))}
+        </Box>
       </Box>
       <Box>
         <Typography variant="h6" gutterBottom>
@@ -54,8 +52,3 @@ export function BlockLibrary() {
     </Stack>
   );
 }
-
-
-
-
-

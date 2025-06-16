@@ -52,6 +52,10 @@ export function removedAndPushed(
   newParentId: string | null,
   argumentSlot: number | null,
 ): BlockProps[] {
+  if (child.id === newParentId) {
+    console.warn("trying to drop into self");
+    return topLevelBlocks;
+  }
   // console.log("looking for", newParentId);
   const copy = structuredClone(topLevelBlocks);
   const instantRemove = copy.findIndex((block) => block.id === child.id);

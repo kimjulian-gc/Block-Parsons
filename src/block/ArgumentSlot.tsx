@@ -5,17 +5,12 @@ import { useDroppable } from "@dnd-kit/core";
 import { Draggable } from "./dnd/Draggable.tsx";
 import type { ReactElement } from "react";
 
-interface ArgumentSlotProps {
+export interface ArgumentSlotProps {
   idSuffix: string;
   blockProps?: BlockProps;
-  presentational?: boolean;
 }
 
-export function ArgumentSlot({
-  idSuffix,
-  blockProps,
-  presentational,
-}: ArgumentSlotProps) {
+export function ArgumentSlot({ idSuffix, blockProps }: ArgumentSlotProps) {
   const { setNodeRef, isOver, active } = useDroppable({
     id: `argument-slot-${idSuffix}`,
   });
@@ -43,11 +38,7 @@ export function ArgumentSlot({
         : null)}
     >
       {ChildBlock ? (
-        presentational ? (
-          ChildBlock
-        ) : (
-          <Draggable id={ChildBlock.props.id}>{ChildBlock}</Draggable>
-        )
+        <Draggable id={ChildBlock.props.id}>{ChildBlock}</Draggable>
       ) : null}
     </Box>
   );

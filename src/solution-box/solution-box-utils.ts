@@ -141,6 +141,11 @@ export function removedAndPushed(
       // no swap necessary since we either:
       // 1. deleted already or
       // 2. there's nothing at the destination
+
+      // ensure that there are enough slots
+      if (parent.childBlocks.length < argumentSlot) {
+        parent.childBlocks.push(...new Array<undefined>(argumentSlot));
+      }
       parent.childBlocks.splice(argumentSlot, 0, child);
       return;
     }

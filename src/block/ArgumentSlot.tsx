@@ -26,8 +26,8 @@ export function ArgumentSlot({
   return (
     <Box
       width={"fit-content"}
-      minWidth={"2em"}
-      minHeight={"0.5em"}
+      minWidth={!ChildBlock ? "2em" : "fit-content"}
+      minHeight={!ChildBlock ? "0.5em" : "fit-content"}
       bgcolor={"white"}
       padding={"0.5em"}
       borderRadius={"0.5em"}
@@ -38,7 +38,6 @@ export function ArgumentSlot({
         ? {
             boxShadow: "inset 0 0 0 0.25em lightgreen",
             width: active?.rect.current.initial?.width,
-            // TODO: weird visual glitch when moving from lower block to upper block
             height: active?.rect.current.initial?.height,
           }
         : null)}

@@ -7,9 +7,13 @@ import {
 } from "@dnd-kit/core";
 import { Block, type BlockProps } from "../block/Block.tsx";
 import { useState } from "react";
-import { findChild, removedAndPushed } from "./app-utils.ts";
+import { findChild, removedAndPushed } from "./solution-box-utils.ts";
 import { newUUID, throwNull } from "../common/utils.ts";
-import { Draggable } from "../block/dnd/Draggable.tsx";
+import { Sortable } from "../block/dnd/Sortable.tsx";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
 
 const startingBlocks: BlockProps[] = [
   {
@@ -34,6 +38,7 @@ const startingBlocks: BlockProps[] = [
 export function SolutionBox() {
   const [topLevelBlocks, setTopLevelBlocks] =
     useState<BlockProps[]>(startingBlocks);
+  const sortedBlockIds = topLevelBlocks.map((block) => block.id);
 
   const collisionDetection: CollisionDetection = (args) => {
     // TODO: add drag overlay to avoid setting self as own child
@@ -55,13 +60,14 @@ export function SolutionBox() {
       findChild(topLevelBlocks, active.id.toString()) ??
       throwNull("child was somehow not found?");
     const parentSlotDetails = over?.id.toString().split(":") ?? null;
-    const newParent = parentSlotDetails?.[1] ?? null;
+    const newParent = parentSlotDetails?.[1] ?? over?.id.toString() ?? null;
     const argumentSlot = parentSlotDetails?.[2] ?? null;
+    console.log(structuredClone(parentSlotDetails), newParent, argumentSlot);
     const newTopLevel = removedAndPushed(
       topLevelBlocks,
       child,
       newParent,
-      Number(argumentSlot),
+      argumentSlot ? Number(argumentSlot) : null,
     );
     setTopLevelBlocks(newTopLevel);
   };
@@ -71,11 +77,16 @@ export function SolutionBox() {
       collisionDetection={collisionDetection}
       onDragEnd={handleDragEnd}
     >
-      {topLevelBlocks.map((block) => (
-        <Draggable id={block.id} key={block.id}>
-          <Block {...block} key={block.id} />
-        </Draggable>
-      ))}
+      <SortableContext
+        items={sortedBlockIds}
+        strategy={verticalListSortingStrategy}
+      >
+        {topLevelBlocks.map((block) => (
+          <Sortable id={block.id} key={block.id}>
+            <Block {...block} key={block.id} />
+          </Sortable>
+        ))}
+      </SortableContext>
     </DndContext>
   );
 }

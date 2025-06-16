@@ -17,8 +17,11 @@ export interface BlockProps {
 }
 
 export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
+  // minBase is min number of arguments
   const minBase = argumentOptions?.minAmount ?? 0;
+  // check if a block is expandable
   const expandable = argumentOptions?.expandable ?? false;
+  // if a block is expandable, leave
   const minAmount = expandable ? minBase + 1 : minBase;
   const isConstant = minAmount === 0;
   const [args] = useState<(BlockProps | undefined)[]>(() => {

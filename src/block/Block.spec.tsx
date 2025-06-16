@@ -39,3 +39,48 @@ describe("Block component", () => {
     expect(renderResult.getByText(new RegExp(testName))).toBeInTheDocument();
   });
 });
+
+//testing expandable and non-expandable blocks
+describe("Block component", () => {
+  const testName = "Block component test block";
+  // used as a child block with 0 arguments of its own
+  const argumentAmt = 0;
+  const testBlock2 = (
+    <Block name={testName} argumentOptions={{ minAmount: argumentAmt }} />
+  );
+  let renderResult: RenderResult;
+//testing non-expandable blocks
+  it("renders non-expandable", () => {
+    const testName1 = "non-expandable";
+    const argumentAmt = 2;
+    const expand = false
+    renderResult = render(
+      <Block
+        name={testName1}
+        argumentOptions={{ minAmount: argumentAmt, expandable: expand }}
+        childBlocks={[testBlock2.props]}
+      />,
+    );
+    expect(
+      renderResult.getAllByLabelText(BlockLabels.ArgumentSlot),).toHaveLength(argumentAmt);
+    expect(renderResult.getByText(new RegExp(testName))).toBeInTheDocument();
+    expect(renderResult.getByText(new RegExp(testName1))).toBeInTheDocument();
+  });
+   it("renders expandable", () => {
+    const testName2 = "expandable";
+    const argumentAmt = 2;
+    const expand = true;
+    renderResult = render(
+      <Block
+        name={testName2}
+        argumentOptions={{ minAmount: argumentAmt, expandable: expand }}
+        childBlocks={[testBlock2.props]}
+      />,
+    );
+    // if expandable, have an argument amount that is 1 more
+    expect(
+      renderResult.getAllByLabelText(BlockLabels.ArgumentSlot),).toHaveLength(argumentAmt+1);
+    expect(renderResult.getByText(new RegExp(testName2))).toBeInTheDocument();
+    expect(renderResult.getByText(new RegExp(testName))).toBeInTheDocument();
+  });
+});

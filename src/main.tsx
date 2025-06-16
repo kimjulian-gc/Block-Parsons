@@ -12,8 +12,8 @@ const blocks = [
   { name: "small-grey" },
   {
     name: "solid-circle",
-    argumentOptions: { minAmount: 2, expandable: true },
-    childBlocks: [{ name: "20" }, { name: '"red"' }],
+    argumentOptions: { minAmount: 3, expandable: true },
+    childBlocks: [{ name: "20" }, {name : "red"}, {name : "blue"}],
   },
 ];
 

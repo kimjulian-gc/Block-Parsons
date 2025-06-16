@@ -16,7 +16,7 @@ export function ArgumentSlot({
   blockProps,
   presentational,
 }: ArgumentSlotProps) {
-  const { isOver, setNodeRef } = useDroppable({
+  const { setNodeRef, isOver, active } = useDroppable({
     id: `argument-slot-${idSuffix}`,
   });
 
@@ -34,7 +34,13 @@ export function ArgumentSlot({
       marginLeft={"1em"}
       aria-label={BlockLabels.ArgumentSlot}
       ref={setNodeRef}
-      {...(isOver ? { boxShadow: "inset 0 0 0 0.25em lightgreen" } : null)}
+      {...(isOver
+        ? {
+            boxShadow: "inset 0 0 0 0.25em lightgreen",
+            width: active?.rect.current.initial?.width,
+            height: active?.rect.current.initial?.height,
+          }
+        : null)}
     >
       {ChildBlock ? (
         presentational ? (

@@ -2,11 +2,13 @@ import {
   type CollisionDetection,
   DndContext,
   type DragEndEvent,
+  DragOverlay,
+  type DragStartEvent,
   pointerWithin,
   rectIntersection,
 } from "@dnd-kit/core";
 import { Block, type BlockProps } from "../block/Block.tsx";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { findChild, removedAndPushed } from "./solution-box-utils.ts";
 import { newUUID, throwNull } from "../common/utils.ts";
 import { Sortable } from "../block/dnd/Sortable.tsx";
@@ -40,6 +42,8 @@ export function SolutionBox() {
     useState<BlockProps[]>(startingBlocks);
   const sortedBlockIds = topLevelBlocks.map((block) => block.id);
 
+  const [activeProps, setActiveProps] = useState<BlockProps | null>(null);
+
   const collisionDetection: CollisionDetection = (args) => {
     // TODO: add drag overlay to avoid setting self as own child
     const pointerCollisions = pointerWithin(args);
@@ -50,31 +54,43 @@ export function SolutionBox() {
     return rectIntersection(args);
   };
 
-  const handleDragEnd = ({ active, over }: DragEndEvent) => {
-    // 1. find the original parent block,
-    // 2. remove the active block from the original parent, and
-    // 3. push to its new parent's child blocks
-    // TODO: terrible DFS-based implementation,
-    //  ideally we'd use a hash map over the uuids
-    const child =
-      findChild(topLevelBlocks, active.id.toString()) ??
-      throwNull("child was somehow not found?");
-    const parentSlotDetails = over?.id.toString().split(":") ?? null;
-    const newParent = parentSlotDetails?.[1] ?? over?.id.toString() ?? null;
-    const argumentSlot = parentSlotDetails?.[2] ?? null;
-    console.log(structuredClone(parentSlotDetails), newParent, argumentSlot);
-    const newTopLevel = removedAndPushed(
-      topLevelBlocks,
-      child,
-      newParent,
-      argumentSlot ? Number(argumentSlot) : null,
-    );
-    setTopLevelBlocks(newTopLevel);
-  };
+  const handleDragEnd = useCallback(
+    ({ active, over }: DragEndEvent) => {
+      // 1. find the original parent block,
+      // 2. remove the active block from the original parent, and
+      // 3. push to its new parent's child blocks
+      // TODO: terrible DFS-based implementation,
+      //  ideally we'd use a hash map over the uuids
+      const child =
+        findChild(topLevelBlocks, active.id.toString()) ??
+        throwNull("child was somehow not found?");
+      const parentSlotDetails = over?.id.toString().split(":") ?? null;
+      const newParent = parentSlotDetails?.[1] ?? over?.id.toString() ?? null;
+      const argumentSlot = parentSlotDetails?.[2] ?? null;
+      console.log(structuredClone(parentSlotDetails), newParent, argumentSlot);
+      const newTopLevel = removedAndPushed(
+        topLevelBlocks,
+        child,
+        newParent,
+        argumentSlot ? Number(argumentSlot) : null,
+      );
+      setTopLevelBlocks(newTopLevel);
+      setActiveProps(null);
+    },
+    [topLevelBlocks],
+  );
+
+  const handleDragStart = useCallback(
+    ({ active }: DragStartEvent) => {
+      setActiveProps(findChild(topLevelBlocks, active.id.toString()));
+    },
+    [topLevelBlocks],
+  );
 
   return (
     <DndContext
       collisionDetection={collisionDetection}
+      onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}
     >
       <SortableContext
@@ -87,6 +103,10 @@ export function SolutionBox() {
           </Sortable>
         ))}
       </SortableContext>
+      <DragOverlay>
+        // TODO: both overlay and item shows while dragging
+        {activeProps ? <Block {...activeProps} presentational={true} /> : null}
+      </DragOverlay>
     </DndContext>
   );
 }

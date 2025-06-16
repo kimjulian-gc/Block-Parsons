@@ -15,6 +15,7 @@ export interface BlockProps {
   // TODO: i don't like this implementation of child
   //  blocks, ideally i'd like child elements
   childBlocks?: (BlockProps | undefined)[];
+  presentational?: boolean;
 }
 
 export function Block({
@@ -22,6 +23,7 @@ export function Block({
   name,
   argumentOptions,
   childBlocks,
+  presentational,
 }: BlockProps) {
   // minBase is min number of arguments
   const minBase = argumentOptions?.minAmount ?? 0;
@@ -57,9 +59,14 @@ export function Block({
       {name}
       {args.map((blockProps, index) => {
         const idSuffix = `${name}:${id}:${index.toString()}`;
+        const propsToPass = {
+          idSuffix,
+          blockProps,
+          presentational,
+        };
         return index === args.length - 1 ? (
           <Stack direction={"row"} alignItems={"flex-end"} key={index}>
-            <ArgumentSlot idSuffix={idSuffix} blockProps={blockProps} />{" "}
+            <ArgumentSlot {...propsToPass} />{" "}
             <Box
               marginLeft={"0.25em"}
               {...(blockProps ? { marginBottom: "1em" } : null)}
@@ -68,11 +75,7 @@ export function Block({
             </Box>
           </Stack>
         ) : (
-          <ArgumentSlot
-            idSuffix={idSuffix}
-            blockProps={blockProps}
-            key={index}
-          />
+          <ArgumentSlot {...propsToPass} key={index} />
         );
       })}
     </Stack>

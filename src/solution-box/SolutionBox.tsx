@@ -4,7 +4,6 @@ import {
   type DragEndEvent,
   DragOverlay,
   type DragStartEvent,
-  pointerWithin,
   rectIntersection,
 } from "@dnd-kit/core";
 import { Block, type BlockProps } from "../block/Block.tsx";
@@ -44,14 +43,8 @@ export function SolutionBox() {
 
   const [activeProps, setActiveProps] = useState<BlockProps | null>(null);
 
-  const collisionDetection: CollisionDetection = (args) => {
-    const pointerCollisions = pointerWithin(args);
-
-    if (pointerCollisions.length > 0) {
-      return pointerCollisions;
-    }
-    return rectIntersection(args);
-  };
+  const collisionDetection: CollisionDetection = (args) =>
+    rectIntersection(args);
 
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {

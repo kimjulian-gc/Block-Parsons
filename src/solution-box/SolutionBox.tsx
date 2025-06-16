@@ -91,7 +91,11 @@ export function SolutionBox() {
       >
         {topLevelBlocks.map((block) => (
           <Sortable id={block.id} key={block.id}>
-            <Block {...block} key={block.id} />
+            <Block
+              {...block}
+              key={block.id}
+              presentational={activeProps?.id === block.id}
+            />
           </Sortable>
         ))}
       </SortableContext>

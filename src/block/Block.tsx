@@ -1,6 +1,7 @@
 import { Box, Stack } from "@mui/material";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
 import { newUUID } from "../common/utils.ts";
+import { PresentationalArgumentSlot } from "./PresentationalArgumentSlot.tsx";
 
 interface ArgumentOptions {
   minAmount: number;
@@ -62,11 +63,15 @@ export function Block({
         const propsToPass = {
           idSuffix,
           blockProps,
-          presentational,
         };
+        const ChildBlock = presentational ? (
+          <PresentationalArgumentSlot {...propsToPass} key={index} />
+        ) : (
+          <ArgumentSlot {...propsToPass} key={index} />
+        );
         return index === args.length - 1 ? (
           <Stack direction={"row"} alignItems={"flex-end"} key={index}>
-            <ArgumentSlot {...propsToPass} />{" "}
+            {ChildBlock}{" "}
             <Box
               marginLeft={"0.25em"}
               {...(blockProps ? { marginBottom: "1em" } : null)}
@@ -75,7 +80,7 @@ export function Block({
             </Box>
           </Stack>
         ) : (
-          <ArgumentSlot {...propsToPass} key={index} />
+          ChildBlock
         );
       })}
     </Stack>

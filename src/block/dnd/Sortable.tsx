@@ -5,13 +5,13 @@ import { CSS } from "@dnd-kit/utilities";
 import { Box } from "@mui/material";
 
 export function Sortable({ id, children }: PropsWithChildren<DragDropProps>) {
-  // TODO: need presentational components
   const {
     attributes,
     listeners,
     setNodeRef,
     transform: dragTransform,
     transition,
+    isDragging,
   } = useSortable({
     id,
   });
@@ -20,7 +20,7 @@ export function Sortable({ id, children }: PropsWithChildren<DragDropProps>) {
   return (
     <Box
       ref={setNodeRef}
-      sx={{ transform, transition }}
+      sx={{ transform, transition, opacity: isDragging ? 0 : 1 }}
       {...attributes}
       {...listeners}
     >

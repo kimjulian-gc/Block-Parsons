@@ -27,7 +27,7 @@ export function ArgumentSlot({
     <Box
       width={"fit-content"}
       minWidth={"2em"}
-      minHeight={"0.25em"}
+      minHeight={"0.5em"}
       bgcolor={"white"}
       padding={"0.5em"}
       borderRadius={"0.5em"}

@@ -45,7 +45,6 @@ export function SolutionBox() {
   const [activeProps, setActiveProps] = useState<BlockProps | null>(null);
 
   const collisionDetection: CollisionDetection = (args) => {
-    // TODO: add drag overlay to avoid setting self as own child
     const pointerCollisions = pointerWithin(args);
 
     if (pointerCollisions.length > 0) {
@@ -104,7 +103,6 @@ export function SolutionBox() {
         ))}
       </SortableContext>
       <DragOverlay>
-        // TODO: both overlay and item shows while dragging
         {activeProps ? <Block {...activeProps} presentational={true} /> : null}
       </DragOverlay>
     </DndContext>

@@ -35,6 +35,7 @@ export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
       Array.from({ length: minAmount - childBlocks.length }),
     );
   });
+  // console.log(name, argumentOptions,args)
 
   return (
     <Stack

@@ -10,13 +10,19 @@ export function Draggable({ id, children }: PropsWithChildren<DragDropProps>) {
     listeners,
     setNodeRef,
     transform: dragTransform,
+    isDragging,
   } = useDraggable({
     id,
   });
   const transform = CSS.Translate.toString(dragTransform);
 
   return (
-    <Box ref={setNodeRef} sx={{ transform }} {...attributes} {...listeners}>
+    <Box
+      ref={setNodeRef}
+      sx={{ transform, opacity: isDragging ? 0 : 1 }}
+      {...attributes}
+      {...listeners}
+    >
       {children}
     </Box>
   );

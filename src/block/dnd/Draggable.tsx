@@ -1,16 +1,10 @@
-import { type UniqueIdentifier, useDraggable } from "@dnd-kit/core";
+import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { Box } from "@mui/material";
 import type { PropsWithChildren } from "react";
+import type { DragDropProps } from "./dnd-props.ts";
 
-interface DraggableItemProps {
-  id: UniqueIdentifier;
-}
-
-export function Draggable({
-  id,
-  children,
-}: PropsWithChildren<DraggableItemProps>) {
+export function Draggable({ id, children }: PropsWithChildren<DragDropProps>) {
   const {
     attributes,
     listeners,

@@ -50,15 +50,13 @@ export function removedAndPushed(
   topLevelBlocks: BlockProps[],
   child: BlockProps,
   newParentId: string | null,
-  argumentSlot: number,
+  argumentSlot: number | null,
 ): BlockProps[] {
   // console.log("looking for", newParentId);
   const copy = structuredClone(topLevelBlocks);
-  const instantRemove = copy.find((block) => block.id === child.id);
-  if (instantRemove) {
-    // console.log("found top level, removed");
-    const indexToRemove = copy.findIndex((block) => block.id === child.id);
-    copy.splice(indexToRemove, 1);
+  const instantRemove = copy.findIndex((block) => block.id === child.id);
+  if (instantRemove > -1) {
+    copy.splice(instantRemove, 1);
   }
   // console.log("copy after potential remove", structuredClone(copy));
   const stack: StackNode[] = [];
@@ -112,8 +110,23 @@ export function removedAndPushed(
 
   function pushChild() {
     if (!newParentId) {
-      // TODO: need to be able to top level drop in place
       copy.push(child);
+      return;
+    }
+    if (argumentSlot === null) {
+      const parentIndex = copy.findIndex((block) => block.id === newParentId);
+      console.warn(
+        "top level swap",
+        structuredClone(copy),
+        parentIndex,
+        instantRemove,
+      );
+      copy.splice(
+        parentIndex +
+          (instantRemove > -1 && instantRemove <= parentIndex ? 1 : 0),
+        0,
+        child,
+      );
       return;
     }
     if (!parent) {

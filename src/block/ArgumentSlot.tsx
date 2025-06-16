@@ -38,6 +38,7 @@ export function ArgumentSlot({
         ? {
             boxShadow: "inset 0 0 0 0.25em lightgreen",
             width: active?.rect.current.initial?.width,
+            // TODO: weird visual glitch when moving from lower block to upper block
             height: active?.rect.current.initial?.height,
           }
         : null)}

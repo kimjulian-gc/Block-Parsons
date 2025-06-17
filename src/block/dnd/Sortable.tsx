@@ -1,26 +1,22 @@
 import type { PropsWithChildren } from "react";
 import type { DragDropProps } from "./dnd-props.ts";
 import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
 import { Box } from "@mui/material";
 
 export function Sortable({ id, children }: PropsWithChildren<DragDropProps>) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform: dragTransform,
-    transition,
-    isDragging,
-  } = useSortable({
-    id,
-  });
-  const transform = CSS.Translate.toString(dragTransform);
+  const { attributes, listeners, setNodeRef, transition, isDragging } =
+    useSortable({
+      id,
+    });
 
   return (
     <Box
+      width={"fit-content"}
       ref={setNodeRef}
-      sx={{ transform, transition, opacity: isDragging ? 0 : 1 }}
+      sx={{
+        transition,
+        opacity: isDragging ? 0 : 1,
+      }}
       {...attributes}
       {...listeners}
     >

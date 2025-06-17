@@ -1,8 +1,13 @@
 import {
+  defaultKeyboardCoordinateGetter,
   DndContext,
   type DragEndEvent,
   DragOverlay,
   type DragStartEvent,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 import { Block, type BlockProps } from "../block/Block.tsx";
 import { useCallback, useState } from "react";
@@ -45,6 +50,13 @@ export function SolutionBox() {
 
   const [activeProps, setActiveProps] = useState<BlockProps | null>(null);
 
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: defaultKeyboardCoordinateGetter,
+    }),
+  );
+
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {
       // 1. find the original parent block,
@@ -80,6 +92,7 @@ export function SolutionBox() {
 
   return (
     <DndContext
+      sensors={sensors}
       collisionDetection={collisionDetection}
       onDragStart={handleDragStart}
       onDragEnd={handleDragEnd}

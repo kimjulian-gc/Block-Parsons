@@ -1,6 +1,8 @@
 import { Box, Stack } from "@mui/material";
-import { useState } from "react";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
+import { newUUID } from "../common/utils.ts";
+import { PresentationalArgumentSlot } from "./PresentationalArgumentSlot.tsx";
+import { useDndContext } from "@dnd-kit/core";
 
 interface ArgumentOptions {
   minAmount: number;
@@ -9,14 +11,25 @@ interface ArgumentOptions {
 }
 
 export interface BlockProps {
+  id: string;
   name: string;
   argumentOptions?: ArgumentOptions;
   // TODO: i don't like this implementation of child
   //  blocks, ideally i'd like child elements
-  childBlocks?: BlockProps[];
+  childBlocks?: (BlockProps | undefined)[];
+  presentational?: boolean;
 }
 
-export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
+export function Block({
+  id = newUUID(),
+  name,
+  argumentOptions,
+  childBlocks,
+  presentational: presentationalProp,
+}: BlockProps) {
+  const { active } = useDndContext();
+  const presentational = presentationalProp || active?.id === id.toString();
+
   // minBase is min number of arguments
   const minBase = argumentOptions?.minAmount ?? 0;
   // check if a block is expandable
@@ -24,7 +37,7 @@ export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
   // if a block is expandable, leave
   const minAmount = expandable ? minBase + 1 : minBase;
   const isConstant = minAmount === 0;
-  const [args] = useState<(BlockProps | undefined)[]>(() => {
+  const args = ((): (BlockProps | undefined)[] => {
     if (!childBlocks) {
       return Array.from({ length: minAmount });
     }
@@ -34,7 +47,7 @@ export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
     return childBlocks.concat(
       Array.from({ length: minAmount - childBlocks.length }),
     );
-  });
+  })();
   // console.log(name, argumentOptions,args)
 
   return (
@@ -49,10 +62,20 @@ export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
     >
       {isConstant ? null : "("}
       {name}
-      {args.map((blockProps, index) =>
-        index === args.length - 1 ? (
+      {args.map((blockProps, index) => {
+        const idSuffix = `${name}:${id}:${index.toString()}`;
+        const propsToPass = {
+          idSuffix,
+          blockProps,
+        };
+        const ChildBlock = presentational ? (
+          <PresentationalArgumentSlot {...propsToPass} key={index} />
+        ) : (
+          <ArgumentSlot {...propsToPass} key={index} />
+        );
+        return index === args.length - 1 ? (
           <Stack direction={"row"} alignItems={"flex-end"} key={index}>
-            <ArgumentSlot blockProps={blockProps} />{" "}
+            {ChildBlock}{" "}
             <Box
               marginLeft={"0.25em"}
               {...(blockProps ? { marginBottom: "1em" } : null)}
@@ -61,9 +84,9 @@ export function Block({ name, argumentOptions, childBlocks }: BlockProps) {
             </Box>
           </Stack>
         ) : (
-          <ArgumentSlot blockProps={blockProps} key={index} />
-        ),
-      )}
+          ChildBlock
+        );
+      })}
     </Stack>
   );
 }

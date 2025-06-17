@@ -1,13 +1,18 @@
-import { Box, Stack, Typography, Button } from "@mui/material";
-import { useState, useEffect } from "react";
-import { Block } from "./Block.tsx";
+import { Box, Button, Stack, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Block, type BlockProps } from "./Block.tsx";
+import { newUUID } from "../common/utils.ts";
 
-const blocks = [
-  { name: "small-circle", argumentOptions: { minAmount: 3 } },
-  { name: "medium-rectangle", argumentOptions: { minAmount: 3 } },
-  { name: "eirheh", argumentOptions: { minAmount: 0 } },
-  { name: "5", argumentOptions: { minAmount: 0 } },
-  { name: "square", argumentOptions: { minAmount: 0 } },
+const blocks: BlockProps[] = [
+  { id: newUUID(), name: "small-circle", argumentOptions: { minAmount: 3 } },
+  {
+    id: newUUID(),
+    name: "medium-rectangle",
+    argumentOptions: { minAmount: 3 },
+  },
+  { id: newUUID(), name: "eirheh", argumentOptions: { minAmount: 0 } },
+  { id: newUUID(), name: "5", argumentOptions: { minAmount: 0 } },
+  { id: newUUID(), name: "square", argumentOptions: { minAmount: 0 } },
 ];
 
 export function BlockLibrary() {
@@ -47,6 +52,7 @@ export function BlockLibrary() {
           {blocks.map((block, index) => (
             <Box key={index} mt={index > 0 ? 2 : 0}>
               <Block
+                id={block.id}
                 name={block.name}
                 argumentOptions={block.argumentOptions}
                 aria-label={`Block ${block.name}`}

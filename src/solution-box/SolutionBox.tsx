@@ -1,5 +1,4 @@
 import {
-  type CollisionDetection,
   DndContext,
   type DragEndEvent,
   DragOverlay,
@@ -7,14 +6,17 @@ import {
 } from "@dnd-kit/core";
 import { Block, type BlockProps } from "../block/Block.tsx";
 import { useCallback, useState } from "react";
-import { findChild, removedAndPushed } from "./solution-box-utils.ts";
+import {
+  collisionDetection,
+  findChild,
+  removedAndPushed,
+} from "./solution-box-utils.ts";
 import { newUUID, throwNull } from "../common/utils.ts";
 import { Sortable } from "../block/dnd/Sortable.tsx";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import type { CollisionDescriptor } from "@dnd-kit/core/dist/utilities/algorithms/types";
 
 const startingBlocks: BlockProps[] = [
   {
@@ -43,33 +45,6 @@ export function SolutionBox() {
 
   const [activeProps, setActiveProps] = useState<BlockProps | null>(null);
 
-  const collisionDetection: CollisionDetection = useCallback(
-    ({ collisionRect, droppableRects, droppableContainers }) => {
-      const collisions: CollisionDescriptor[] = [];
-
-      for (const droppableContainer of droppableContainers) {
-        const { id } = droppableContainer;
-        const rect = droppableRects.get(id);
-
-        if (!rect) continue;
-
-        const activeTop = collisionRect.top;
-        const dropTop = rect.top;
-        const dropBottom = rect.bottom;
-        const dist = Math.min(
-          Math.abs(activeTop - dropTop),
-          Math.abs(activeTop - dropBottom),
-        );
-        collisions.push({ id, data: { droppableContainer, value: dist } });
-      }
-
-      const sorted = collisions.sort((a, b) => a.data.value - b.data.value);
-      console.warn(sorted);
-      return sorted;
-    },
-    [],
-  );
-
   const handleDragEnd = useCallback(
     ({ active, over }: DragEndEvent) => {
       // 1. find the original parent block,
@@ -83,7 +58,7 @@ export function SolutionBox() {
       const parentSlotDetails = over?.id.toString().split(":") ?? null;
       const newParent = parentSlotDetails?.[1] ?? over?.id.toString() ?? null;
       const argumentSlot = parentSlotDetails?.[2] ?? null;
-      console.log(structuredClone(parentSlotDetails), newParent, argumentSlot);
+      // console.log(structuredClone(parentSlotDetails), newParent, argumentSlot);
       const newTopLevel = removedAndPushed(
         topLevelBlocks,
         child,

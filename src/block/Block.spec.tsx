@@ -49,11 +49,11 @@ describe("Block component", () => {
     <Block name={testName} argumentOptions={{ minAmount: argumentAmt }} />
   );
   let renderResult: RenderResult;
-//testing non-expandable blocks
+  //testing non-expandable blocks
   it("renders non-expandable", () => {
     const testName1 = "non-expandable";
     const argumentAmt = 2;
-    const expand = false
+    const expand = false;
     renderResult = render(
       <Block
         name={testName1}
@@ -62,11 +62,12 @@ describe("Block component", () => {
       />,
     );
     expect(
-      renderResult.getAllByLabelText(BlockLabels.ArgumentSlot),).toHaveLength(argumentAmt);
+      renderResult.getAllByLabelText(BlockLabels.ArgumentSlot),
+    ).toHaveLength(argumentAmt);
     expect(renderResult.getByText(new RegExp(testName))).toBeInTheDocument();
     expect(renderResult.getByText(new RegExp(testName1))).toBeInTheDocument();
   });
-   it("renders expandable", () => {
+  it("renders expandable", () => {
     const testName2 = "expandable";
     const argumentAmt = 2;
     const expand = true;
@@ -79,7 +80,8 @@ describe("Block component", () => {
     );
     // if expandable, have an argument amount that is 1 more
     expect(
-      renderResult.getAllByLabelText(BlockLabels.ArgumentSlot),).toHaveLength(argumentAmt+1);
+      renderResult.getAllByLabelText(BlockLabels.ArgumentSlot),
+    ).toHaveLength(argumentAmt + 1);
     expect(renderResult.getByText(new RegExp(testName2))).toBeInTheDocument();
     expect(renderResult.getByText(new RegExp(testName))).toBeInTheDocument();
   });

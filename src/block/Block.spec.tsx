@@ -52,7 +52,11 @@ describe("Block component", () => {
   // used as a child block with 0 arguments of its own
   const argumentAmt = 0;
   const testBlock2 = (
-    <Block name={testName} argumentOptions={{ minAmount: argumentAmt }} />
+    <Block
+      id={newUUID()}
+      name={testName}
+      argumentOptions={{ minAmount: argumentAmt }}
+    />
   );
   let renderResult: RenderResult;
   //testing non-expandable blocks
@@ -62,6 +66,7 @@ describe("Block component", () => {
     const expand = false;
     renderResult = render(
       <Block
+        id={newUUID()}
         name={testName1}
         argumentOptions={{ minAmount: argumentAmt, expandable: expand }}
         childBlocks={[testBlock2.props]}
@@ -79,6 +84,7 @@ describe("Block component", () => {
     const expand = true;
     renderResult = render(
       <Block
+        id={newUUID()}
         name={testName2}
         argumentOptions={{ minAmount: argumentAmt, expandable: expand }}
         childBlocks={[testBlock2.props]}

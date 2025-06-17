@@ -147,8 +147,11 @@ export function removedAndPushed(
       // 2. there's nothing at the destination
 
       // ensure that there are enough slots
-      if (parent.childBlocks.length < argumentSlot) {
-        parent.childBlocks.push(...new Array<undefined>(argumentSlot));
+      if (parent.childBlocks.length < argumentSlot + 1) {
+        // TODO: too many added
+        parent.childBlocks.push(
+          ...new Array<undefined>(argumentSlot - parent.childBlocks.length),
+        );
       }
       parent.childBlocks.splice(argumentSlot, 0, child);
       return;

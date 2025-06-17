@@ -2,6 +2,7 @@ import { Box, Stack } from "@mui/material";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
 import { newUUID } from "../common/utils.ts";
 import { PresentationalArgumentSlot } from "./PresentationalArgumentSlot.tsx";
+import { useDndContext } from "@dnd-kit/core";
 
 interface ArgumentOptions {
   minAmount: number;
@@ -24,8 +25,11 @@ export function Block({
   name,
   argumentOptions,
   childBlocks,
-  presentational,
+  presentational: presentationalProp,
 }: BlockProps) {
+  const { active } = useDndContext();
+  const presentational = presentationalProp || active?.id === id.toString();
+
   // minBase is min number of arguments
   const minBase = argumentOptions?.minAmount ?? 0;
   // check if a block is expandable

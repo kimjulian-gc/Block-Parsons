@@ -149,12 +149,17 @@ export function removedAndPushed(
       // 2. there's nothing at the destination
 
       // ensure that there are enough slots
-      if (parent.childBlocks.length < argumentSlot + 1) {
-        // TODO: too many added
+      if (parent.childBlocks.length < argumentSlot) {
         parent.childBlocks.push(
           ...new Array<undefined>(argumentSlot - parent.childBlocks.length),
         );
       }
+      // if nothing at destination, just add
+      if (!temp) {
+        parent.childBlocks[argumentSlot] = child;
+        return;
+      }
+      // otherwise, deleted already
       parent.childBlocks.splice(argumentSlot, 0, child);
       return;
     }

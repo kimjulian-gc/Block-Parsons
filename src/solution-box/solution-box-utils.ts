@@ -55,7 +55,7 @@ export function removedAndPushed(
   argumentSlot: number | null,
 ): BlockProps[] {
   if (child.id === newParentId) {
-    console.warn("trying to drop into self");
+    console.warn("trying to drop onto/into self");
     return topLevelBlocks;
   }
   // console.log("looking for", newParentId);
@@ -175,8 +175,7 @@ export function removedAndPushed(
     parent.childBlocks[argumentSlot] = child;
     if (!oldParent || !oldParent.block.childBlocks) {
       // oldParent was top level
-      // TODO: push for now until top level drop in place
-      copy.push(temp);
+      copy.splice(instantRemove, 0, temp);
       return;
     }
     const { i } = oldParent;

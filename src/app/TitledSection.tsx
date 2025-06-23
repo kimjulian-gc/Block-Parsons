@@ -12,7 +12,7 @@ export function TitledSection({
   return (
     <Stack spacing={2}>
       <Typography variant="h6">{title}</Typography>
-      <Box border={2} borderRadius={"0.5em"} padding={"10px"}>
+      <Box border={2} borderRadius={"0.5em"} padding={"10px"} flexGrow={1}>
         {children}
       </Box>
     </Stack>

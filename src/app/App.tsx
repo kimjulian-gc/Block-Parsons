@@ -5,7 +5,7 @@ import { SolutionBox } from "../solution-box/SolutionBox.tsx";
 
 export function App() {
   return (
-    <Stack direction={"row"} spacing={10}>
+    <Stack direction={"row"} spacing={2}>
       <TitledSection title={"Block Library"}>
         <BlockLibrary />
       </TitledSection>

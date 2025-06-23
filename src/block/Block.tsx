@@ -1,6 +1,6 @@
 import { Box, Stack } from "@mui/material";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
-import { newUUID, throwNull } from "../common/utils.ts";
+import { throwNull } from "../common/utils.ts";
 import { PresentationalArgumentSlot } from "./PresentationalArgumentSlot.tsx";
 import { useDndContext } from "@dnd-kit/core";
 import { useBlockContext } from "../app/providers/block/BlockContext.ts";
@@ -10,10 +10,7 @@ export interface BlockProps {
   presentational?: boolean;
 }
 
-export function Block({
-  id = newUUID(),
-  presentational: presentationalProp,
-}: BlockProps) {
+export function Block({ id, presentational: presentationalProp }: BlockProps) {
   const blocks = useBlockContext();
   const { childBlocks, name, argumentOptions } =
     blocks.get(id.toString()) ??
@@ -40,6 +37,7 @@ export function Block({
       Array.from({ length: minAmount - childBlocks.length }),
     );
   })();
+  console.log(args);
   // console.log(name, argumentOptions,args)
 
   return (
@@ -54,11 +52,11 @@ export function Block({
     >
       {isConstant ? null : "("}
       {name}
-      {args.map((blockProps, index) => {
+      {args.map((blockId, index) => {
         const idSuffix = `${name}:${id}:${index.toString()}`;
         const propsToPass = {
           idSuffix,
-          blockProps,
+          blockId,
         };
         const ChildBlock = presentational ? (
           <PresentationalArgumentSlot {...propsToPass} key={index} />
@@ -70,7 +68,9 @@ export function Block({
             {ChildBlock}{" "}
             <Box
               marginLeft={"0.25em"}
-              {...(blockProps ? { marginBottom: "1em" } : null)}
+              {...(blockId && blocks.has(blockId)
+                ? { marginBottom: "1em" }
+                : null)}
             >
               )
             </Box>

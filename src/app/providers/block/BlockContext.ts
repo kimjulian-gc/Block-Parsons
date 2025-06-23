@@ -6,11 +6,16 @@ interface ArgumentOptions {
   expandable?: boolean;
 }
 
+export const RootParents = {
+  SolutionBox: "SolutionBox",
+  BlockLibrary: "BlockLibrary",
+};
+
 export interface BlockData {
   name: string;
   argumentOptions?: ArgumentOptions;
   childBlocks?: string[];
-  parentId: string | null;
+  parentId: string;
 }
 
 type BlockContextType = Map<string, BlockData>;

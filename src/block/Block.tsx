@@ -1,32 +1,24 @@
 import { Box, Stack } from "@mui/material";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
-import { newUUID } from "../common/utils.ts";
+import { newUUID, throwNull } from "../common/utils.ts";
 import { PresentationalArgumentSlot } from "./PresentationalArgumentSlot.tsx";
 import { useDndContext } from "@dnd-kit/core";
-
-interface ArgumentOptions {
-  minAmount: number;
-  // TODO: implement expandable argument slots
-  expandable?: boolean;
-}
+import { useBlockContext } from "../app/providers/block/BlockContext.ts";
 
 export interface BlockProps {
   id: string;
-  name: string;
-  argumentOptions?: ArgumentOptions;
-  // TODO: i don't like this implementation of child
-  //  blocks, ideally i'd like child elements
-  childBlocks?: (BlockProps | undefined)[];
   presentational?: boolean;
 }
 
 export function Block({
   id = newUUID(),
-  name,
-  argumentOptions,
-  childBlocks,
   presentational: presentationalProp,
 }: BlockProps) {
+  const blocks = useBlockContext();
+  const { childBlocks, name, argumentOptions } =
+    blocks.get(id.toString()) ??
+    throwNull(`attempted to render unknown block ${id}`);
+
   const { active } = useDndContext();
   const presentational = presentationalProp || active?.id === id.toString();
 
@@ -37,7 +29,7 @@ export function Block({
   // if a block is expandable, leave
   const minAmount = expandable ? minBase + 1 : minBase;
   const isConstant = minAmount === 0;
-  const args = ((): (BlockProps | undefined)[] => {
+  const args = ((): (string | undefined)[] => {
     if (!childBlocks) {
       return Array.from({ length: minAmount });
     }

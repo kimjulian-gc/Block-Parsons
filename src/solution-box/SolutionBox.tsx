@@ -1,119 +1,35 @@
-import {
-  defaultKeyboardCoordinateGetter,
-  DndContext,
-  type DragEndEvent,
-  DragOverlay,
-  type DragStartEvent,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
 import { Block, type BlockProps } from "../block/Block.tsx";
-import { useCallback, useState } from "react";
-import {
-  collisionDetection,
-  findChild,
-  removedAndPushed,
-} from "./solution-box-utils.ts";
-import { newUUID, throwNull } from "../common/utils.ts";
 import { Sortable } from "../block/dnd/Sortable.tsx";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 
-const startingBlocks: BlockProps[] = [
-  {
-    id: newUUID(),
-    name: "define",
-    argumentOptions: { minAmount: 2 },
-    childBlocks: [
-      { id: newUUID(), name: "small-grey" },
-      {
-        id: newUUID(),
-        name: "solid-circle",
-        argumentOptions: { minAmount: 2 },
-        childBlocks: [
-          { id: newUUID(), name: "20" },
-          { id: newUUID(), name: '"red"' },
-        ],
-      },
-    ],
-  },
-];
+export interface SolutionBoxProps {
+  topLevelBlocks: BlockProps[];
+  activeBlockId: string | undefined;
+}
 
-export function SolutionBox() {
-  const [topLevelBlocks, setTopLevelBlocks] =
-    useState<BlockProps[]>(startingBlocks);
+export function SolutionBox({
+  topLevelBlocks,
+  activeBlockId,
+}: SolutionBoxProps) {
   const sortedBlockIds = topLevelBlocks.map((block) => block.id);
 
-  const [activeProps, setActiveProps] = useState<BlockProps | null>(null);
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: defaultKeyboardCoordinateGetter,
-    }),
-  );
-
-  const handleDragEnd = useCallback(
-    ({ active, over }: DragEndEvent) => {
-      // 1. find the original parent block,
-      // 2. remove the active block from the original parent, and
-      // 3. push to its new parent's child blocks
-      // TODO: terrible DFS-based implementation,
-      //  ideally we'd use a hash map over the uuids
-      const child =
-        findChild(topLevelBlocks, active.id.toString()) ??
-        throwNull("child was somehow not found?");
-      const parentSlotDetails = over?.id.toString().split(":") ?? null;
-      const newParent = parentSlotDetails?.[1] ?? over?.id.toString() ?? null;
-      const argumentSlot = parentSlotDetails?.[2] ?? null;
-      // console.log(structuredClone(parentSlotDetails), newParent, argumentSlot);
-      const newTopLevel = removedAndPushed(
-        topLevelBlocks,
-        child,
-        newParent,
-        argumentSlot ? Number(argumentSlot) : null,
-      );
-      setTopLevelBlocks(newTopLevel);
-      setActiveProps(null);
-    },
-    [topLevelBlocks],
-  );
-
-  const handleDragStart = useCallback(
-    ({ active }: DragStartEvent) => {
-      setActiveProps(findChild(topLevelBlocks, active.id.toString()));
-    },
-    [topLevelBlocks],
-  );
-
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={collisionDetection}
-      onDragStart={handleDragStart}
-      onDragEnd={handleDragEnd}
+    <SortableContext
+      items={sortedBlockIds}
+      strategy={verticalListSortingStrategy}
     >
-      <SortableContext
-        items={sortedBlockIds}
-        strategy={verticalListSortingStrategy}
-      >
-        {topLevelBlocks.map((block) => (
-          <Sortable id={block.id} key={block.id}>
-            <Block
-              {...block}
-              key={block.id}
-              presentational={activeProps?.id === block.id}
-            />
-          </Sortable>
-        ))}
-      </SortableContext>
-      <DragOverlay>
-        {activeProps ? <Block {...activeProps} presentational={true} /> : null}
-      </DragOverlay>
-    </DndContext>
+      {topLevelBlocks.map((block) => (
+        <Sortable id={block.id} key={block.id}>
+          <Block
+            {...block}
+            key={block.id}
+            presentational={activeBlockId === block.id}
+          />
+        </Sortable>
+      ))}
+    </SortableContext>
   );
 }

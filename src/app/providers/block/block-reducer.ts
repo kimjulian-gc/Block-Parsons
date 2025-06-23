@@ -1,6 +1,6 @@
 import type { BlockData } from "./BlockContext.ts";
 import { Map } from "immutable";
-import { newUUID } from "../../common/utils.ts";
+import { newUUID } from "../../../common/utils.ts";
 
 const defineId = newUUID();
 const smallGreyId = newUUID();

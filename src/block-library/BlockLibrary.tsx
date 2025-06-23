@@ -38,24 +38,24 @@ export function BlockLibrary() {
 
   return (
     <Box>
-      <Box
+      <Stack
         border={"2px solid black"}
         borderRadius={"0.5em"}
         padding={"1em"}
         width={"fit-content"}
         aria-label="Block Library"
+        spacing={2}
       >
         {blocks.map((block, index) => (
-          <Box key={index} mt={index > 0 ? 2 : 0}>
-            <Block
-              id={block.id}
-              name={block.name}
-              argumentOptions={block.argumentOptions}
-              aria-label={`Block ${block.name}`}
-            />
-          </Box>
+          <Block
+            key={index}
+            id={block.id}
+            name={block.name}
+            argumentOptions={block.argumentOptions}
+            aria-label={`Block ${block.name}`}
+          />
         ))}
-      </Box>
+      </Stack>
       <Stack direction="row" spacing={1}>
         <Button onClick={checkPressed} color={"secondary"}>
           Check

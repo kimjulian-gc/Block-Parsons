@@ -1,6 +1,6 @@
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Block, type BlockProps } from "./Block.tsx";
+import { Block, type BlockProps } from "../block/Block.tsx";
 import { newUUID } from "../common/utils.ts";
 
 const blocks: BlockProps[] = [
@@ -18,7 +18,7 @@ const blocks: BlockProps[] = [
 export function BlockLibrary() {
   const [timeTaken, setTimeTaken] = useState(0);
   const [count, setCount] = useState(0);
-  const [startTime, setStartTime] = useState<number | null>(null);
+  const [, setStartTime] = useState<number | null>(null);
 
   useEffect(() => {
     const start = Date.now();

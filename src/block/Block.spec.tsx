@@ -1,7 +1,7 @@
 import { beforeEach, expect, it } from "vitest";
 import { render, type RenderResult } from "@testing-library/react";
 import { Block } from "./Block.tsx";
-import { BlockLabels } from "./aria-labels.ts";
+import { GenericSlotLabel } from "./aria-labels.ts";
 import { newUUID } from "../common/utils.ts";
 
 describe("Block component", () => {
@@ -25,7 +25,7 @@ describe("Block component", () => {
   });
   it("renders the correct amount of arguments", () => {
     expect(
-      renderResult.getAllByLabelText(BlockLabels.ArgumentSlot),
+      renderResult.getAllByLabelText(new RegExp(GenericSlotLabel)),
     ).toHaveLength(argumentAmt);
   });
   it("renders with passed Block children", () => {
@@ -73,7 +73,7 @@ describe("Block component", () => {
       />,
     );
     expect(
-      renderResult.getAllByLabelText(BlockLabels.ArgumentSlot),
+      renderResult.getAllByLabelText(new RegExp(GenericSlotLabel)),
     ).toHaveLength(argumentAmt);
     expect(renderResult.getByText(new RegExp(testName))).toBeInTheDocument();
     expect(renderResult.getByText(new RegExp(testName1))).toBeInTheDocument();
@@ -92,7 +92,7 @@ describe("Block component", () => {
     );
     // if expandable, have an argument amount that is 1 more
     expect(
-      renderResult.getAllByLabelText(BlockLabels.ArgumentSlot),
+      renderResult.getAllByLabelText(new RegExp(GenericSlotLabel)),
     ).toHaveLength(argumentAmt + 1);
     expect(renderResult.getByText(new RegExp(testName2))).toBeInTheDocument();
     expect(renderResult.getByText(new RegExp(testName))).toBeInTheDocument();

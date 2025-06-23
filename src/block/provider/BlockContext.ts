@@ -22,7 +22,7 @@ export const BlockContext = createContext<BlockContextType | null>(null);
 export function useBlockContext() {
   const context = useContext(BlockContext);
   if (!context) {
-    throw new Error("useAppContext must be used within an AppContext");
+    throw new Error("useBlockContext must be used within a BlockContext");
   }
   return context;
 }

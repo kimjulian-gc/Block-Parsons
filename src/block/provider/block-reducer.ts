@@ -1,4 +1,4 @@
-import type { BlockData } from "./BlockContext.tsx";
+import type { BlockData } from "./BlockContext.ts";
 import { Map } from "immutable";
 import { newUUID } from "../../common/utils.ts";
 
@@ -37,11 +37,11 @@ export const startingBlockMap = Map<string, BlockData>([
   [redId, { name: '"red"', parentId: solidCircleId }],
 ]);
 
-type BlockDispatchType =
+export type BlockDispatchType =
   | { type: "unparent"; payload: string }
   | { type: "parent"; payload: { id: string; parentId: string } };
 
-function blockReducer(
+export function blockReducer(
   state: typeof startingBlockMap,
   action: BlockDispatchType,
 ) {

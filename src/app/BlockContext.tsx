@@ -13,7 +13,7 @@ export interface Block {
 }
 
 interface BlockContextType {
-  blocks: Block[];
+  blocks: Map<string, Block>;
 }
 
 export const BlockContext = createContext<BlockContextType | null>(null);

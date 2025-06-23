@@ -7,16 +7,16 @@ import type { ReactElement } from "react";
 
 export interface ArgumentSlotProps {
   idSuffix: string;
-  blockProps?: BlockProps;
+  blockId?: string | null;
 }
 
-export function ArgumentSlot({ idSuffix, blockProps }: ArgumentSlotProps) {
+export function ArgumentSlot({ idSuffix, blockId }: ArgumentSlotProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: `argument-slot-${idSuffix}`,
   });
 
-  const ChildBlock: ReactElement<BlockProps> | undefined = blockProps && (
-    <Block {...blockProps} />
+  const ChildBlock: ReactElement<BlockProps> | null = !blockId ? null : (
+    <Block id={blockId} />
   );
   return (
     <Box

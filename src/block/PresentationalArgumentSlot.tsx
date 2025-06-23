@@ -4,9 +4,9 @@ import { Block, type BlockProps } from "./Block.tsx";
 import type { ReactElement } from "react";
 import type { ArgumentSlotProps } from "./ArgumentSlot.tsx";
 
-export function PresentationalArgumentSlot({ blockProps }: ArgumentSlotProps) {
-  const ChildBlock: ReactElement<BlockProps> | undefined = blockProps && (
-    <Block {...blockProps} presentational={true} />
+export function PresentationalArgumentSlot({ blockId }: ArgumentSlotProps) {
+  const ChildBlock: ReactElement<BlockProps> | null = !blockId ? null : (
+    <Block id={blockId} />
   );
   return (
     <Box
@@ -19,7 +19,7 @@ export function PresentationalArgumentSlot({ blockProps }: ArgumentSlotProps) {
       marginLeft={"1em"}
       aria-label={BlockLabels.ArgumentSlot}
     >
-      {ChildBlock ?? null}
+      {ChildBlock}
     </Box>
   );
 }

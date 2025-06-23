@@ -2,6 +2,7 @@ import { Box, Button, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Block, type BlockProps } from "../block/Block.tsx";
 import { newUUID } from "../common/utils.ts";
+import { Draggable } from "../block/dnd/Draggable.tsx";
 
 const blocks: BlockProps[] = [
   { id: newUUID(), name: "small-circle", argumentOptions: { minAmount: 3 } },
@@ -46,14 +47,14 @@ export function BlockLibrary() {
         aria-label="Block Library"
         spacing={2}
       >
-        {blocks.map((block, index) => (
-          <Block
-            key={index}
-            id={block.id}
-            name={block.name}
-            argumentOptions={block.argumentOptions}
-            aria-label={`Block ${block.name}`}
-          />
+        {blocks.map((block) => (
+          <Draggable key={block.id} id={block.id}>
+            <Block
+              {...block}
+              aria-label={`Block ${block.name}`}
+              presentational={true}
+            />
+          </Draggable>
         ))}
       </Stack>
       <Stack direction="row" spacing={1}>

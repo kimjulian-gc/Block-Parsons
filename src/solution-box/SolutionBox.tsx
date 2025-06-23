@@ -1,33 +1,31 @@
-import { Block, type BlockProps } from "../block/Block.tsx";
+import { Block } from "../block/Block.tsx";
 import { Sortable } from "../block/dnd/Sortable.tsx";
 import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import {
+  RootParents,
+  useBlockContext,
+} from "../app/providers/block/BlockContext.ts";
+import { useDndContext } from "@dnd-kit/core";
 
-export interface SolutionBoxProps {
-  topLevelBlocks: BlockProps[];
-  activeBlockId: string | undefined;
-}
-
-export function SolutionBox({
-  topLevelBlocks,
-  activeBlockId,
-}: SolutionBoxProps) {
-  const sortedBlockIds = topLevelBlocks.map((block) => block.id);
+export function SolutionBox() {
+  const blocks = useBlockContext();
+  const { active } = useDndContext();
+  const topLevelBlocks = blocks.filter(
+    (block) => block.parentId === RootParents.SolutionBox,
+  );
+  const sortedBlockIds = [...topLevelBlocks.keys()];
 
   return (
     <SortableContext
       items={sortedBlockIds}
       strategy={verticalListSortingStrategy}
     >
-      {topLevelBlocks.map((block) => (
-        <Sortable id={block.id} key={block.id}>
-          <Block
-            {...block}
-            key={block.id}
-            presentational={activeBlockId === block.id}
-          />
+      {topLevelBlocks.keySeq().map((id) => (
+        <Sortable id={id} key={id}>
+          <Block id={id} presentational={active?.id === id} />
         </Sortable>
       ))}
     </SortableContext>

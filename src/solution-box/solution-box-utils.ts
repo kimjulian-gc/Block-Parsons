@@ -1,12 +1,27 @@
-import type { CollisionDetection } from "@dnd-kit/core";
+import { type CollisionDetection, pointerWithin } from "@dnd-kit/core";
 import type { CollisionDescriptor } from "@dnd-kit/core/dist/utilities/algorithms/types";
+import { SectionTitles } from "../app/MainContent.tsx";
 
 // collision
 export const collisionDetection: CollisionDetection = ({
   collisionRect,
   droppableRects,
   droppableContainers,
+  ...rest
 }) => {
+  const uiSections = pointerWithin({
+    collisionRect,
+    droppableRects,
+    droppableContainers,
+    ...rest,
+  }).filter((collision) =>
+    Object.values(SectionTitles).includes(collision.id.toString()),
+  );
+  // console.log(uiSections);
+  if (uiSections[0] && uiSections[0].id === SectionTitles.BlockLibrary) {
+    return [uiSections[0]];
+  }
+
   const collisions: CollisionDescriptor[] = [];
 
   for (const droppableContainer of droppableContainers) {

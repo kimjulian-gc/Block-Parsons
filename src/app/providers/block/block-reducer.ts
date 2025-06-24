@@ -65,14 +65,20 @@ export function blockReducer(
       const ogParent = state.get(ogParentId);
       const ogChildBlocks = ogParent?.childBlocks;
       let ogIndex: number | null = null;
+      let updatedState = state;
       if (ogChildBlocks && (ogIndex = ogChildBlocks.indexOf(id)) > -1) {
         console.log("removing from ogChildBlocks");
         // if (ogIndex === ogChildBlocks.length - 1) {
         //   ogChildBlocks.pop();
         // } else {
-        ogChildBlocks[ogIndex] = null;
+        const modifiedBlocks = [...ogChildBlocks];
+        modifiedBlocks[ogIndex] = null;
         // }
-        ogParent.childBlocks = ogChildBlocks;
+        updatedState = updatedState.setIn(
+          [ogParentId, "childBlocks"],
+          modifiedBlocks,
+        );
+        // console.log(updatedState.get(ogParentId)?.childBlocks);
       }
 
       // set new parent
@@ -80,38 +86,44 @@ export function blockReducer(
       if (!prefix.startsWith(ArgumentSlotPrefix)) {
         // top-level block
         console.warn("new parent top level", prefix);
-        child.parentId = RootParents.SolutionBox;
-        return state.set(id, child);
+        return updatedState.setIn([id, "parentId"], RootParents.SolutionBox);
       }
-      // set new parent
-      child.parentId = newParentId;
-      const updatedChildState = state.set(id, child);
-      const newParent = state.get(newParentId);
+      updatedState = updatedState.setIn([id, "parentId"], newParentId);
+      const newParent = updatedState.get(newParentId);
       if (!newParent || !slotIndex) {
         throw new Error("new parent not found?");
       }
-      const parentChildBlocks = newParent.childBlocks ?? [];
+      const parentChildBlocks = [...(newParent.childBlocks ?? [])];
       // potential swap
       const tempId = parentChildBlocks[Number(slotIndex)];
       parentChildBlocks[Number(slotIndex)] = id;
-      let temp: BlockData | undefined;
-      let afterTempState = updatedChildState;
-      if (tempId && (temp = updatedChildState.get(tempId))) {
+      updatedState = updatedState.setIn(
+        [newParentId, "childBlocks", Number(slotIndex)],
+        id,
+      );
+      if (tempId) {
         console.log("swapping", ogIndex);
+        // don't allow swap with ogParentId
+        if (tempId === ogParentId) {
+          console.warn("ignoring attempted swap with original parent");
+          return state;
+        }
         if (ogChildBlocks && ogIndex !== null && ogIndex > -1) {
           // update ogChildBlocks
           console.warn("updating ogChildBlocks");
-          ogChildBlocks[ogIndex] = tempId;
-          ogParent.childBlocks = ogChildBlocks;
+          updatedState = updatedState.setIn(
+            [ogParentId, "childBlocks", ogIndex],
+            tempId,
+          );
+          // console.warn(updatedState.get(ogParentId)?.childBlocks);
         }
-        temp.parentId = ogParentId;
-        afterTempState = afterTempState.set(tempId, temp);
+        updatedState = updatedState.setIn([tempId, "parentId"], ogParentId);
+        // console.log(updatedState.get(ogParentId)?.childBlocks);
       }
-      newParent.childBlocks = parentChildBlocks;
 
-      console.log(afterTempState);
+      // console.log(updatedState);
 
-      return afterTempState.set(newParentId, newParent);
+      return updatedState;
     }
   }
 }

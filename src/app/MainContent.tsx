@@ -2,11 +2,7 @@ import { Stack } from "@mui/material";
 import { TitledSection } from "./TitledSection.tsx";
 import { BlockLibrary } from "../block-library/BlockLibrary.tsx";
 import { SolutionBox } from "../solution-box/SolutionBox.tsx";
-
-export const SectionTitles = {
-  BlockLibrary: "Block Library",
-  SolutionBox: "Solution Box",
-};
+import { SectionTitles } from "../common/utils.ts";
 
 export function MainContent() {
   return (

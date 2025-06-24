@@ -4,17 +4,15 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import {
-  RootParents,
-  useBlockContext,
-} from "../app/providers/block/BlockContext.ts";
+import { useBlockContext } from "../app/providers/block/BlockContext.ts";
 import { useDndContext } from "@dnd-kit/core";
+import { SectionTitles } from "../common/utils.ts";
 
 export function SolutionBox() {
   const blocks = useBlockContext();
   const { active } = useDndContext();
   const topLevelBlocks = blocks.filter(
-    (block) => block.parentId === RootParents.SolutionBox,
+    (block) => block.parentId === SectionTitles.SolutionBox,
   );
   const sortedBlockIds = [...topLevelBlocks.keys()];
 

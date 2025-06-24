@@ -16,6 +16,17 @@ const blocks: BlockProps[] = [
   { id: newUUID(), name: "square", argumentOptions: { minAmount: 0 } },
 ];
 
+function formatTime(ms: number) {
+  const hours = Math.floor(ms / (3600 * 1000));
+  const minutes = Math.floor((ms % (3600 * 1000)) / (60 * 1000));
+  const seconds = Math.floor((ms % (60 * 1000)) / 1000);
+  const milliseconds = ms % 1000;
+
+  const pad = (n: number, z = 2) => n.toString().padStart(z, "0");
+
+  return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}:${pad(milliseconds, 3)}`;
+}
+
 export function BlockLibrary() {
   const [timeTaken, setTimeTaken] = useState(0);
   const [count, setCount] = useState(0);
@@ -26,7 +37,7 @@ export function BlockLibrary() {
     setStartTime(start);
     const interval = setInterval(() => {
       setTimeTaken(Date.now() - start);
-    }, 1000);
+    }, 10);
 
     return () => {
       clearInterval(interval);
@@ -64,7 +75,7 @@ export function BlockLibrary() {
         <Button> Reset </Button>
       </Stack>
       <Typography> Number of attempts: {count} </Typography>
-      <Typography> Timer: {Math.floor(timeTaken / 1000)} </Typography>
+      <Typography> Time Taken: {formatTime(timeTaken)} </Typography>
     </Box>
   );
 }

@@ -1,6 +1,7 @@
 import { type BlockData, RootParents } from "./BlockContext.ts";
 import { Map } from "immutable";
 import { ArgumentSlotPrefix } from "../../../block/ArgumentSlot.tsx";
+import { SectionTitles } from "../../MainContent.tsx";
 
 const defineId = "define-id";
 const smallGreyId = "smallgrey-id";
@@ -85,8 +86,14 @@ export function blockReducer(
       const [prefix, newParentId, slotIndex] = parentId.split(":");
       if (!prefix.startsWith(ArgumentSlotPrefix)) {
         // top-level block
+        // TODO: implement sortability of top level
         console.warn("new parent top level", prefix);
-        return updatedState.setIn([id, "parentId"], RootParents.SolutionBox);
+        return updatedState.setIn(
+          [id, "parentId"],
+          prefix === SectionTitles.BlockLibrary
+            ? RootParents.BlockLibrary
+            : RootParents.SolutionBox,
+        );
       }
       updatedState = updatedState.setIn([id, "parentId"], newParentId);
       const newParent = updatedState.get(newParentId);

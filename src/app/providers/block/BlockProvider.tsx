@@ -6,7 +6,7 @@ import { BlockDispatchContext } from "./BlockDispatchContext.ts";
 export function BlockProvider({ children }: PropsWithChildren) {
   const [blocks, dispatch] = useReducer(blockReducer, startingBlockMap);
 
-  console.log(blocks);
+  // console.log(blocks);
 
   return (
     <BlockContext value={blocks}>

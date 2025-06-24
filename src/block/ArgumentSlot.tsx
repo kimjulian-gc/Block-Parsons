@@ -10,9 +10,11 @@ export interface ArgumentSlotProps {
   blockId?: string | null;
 }
 
+export const ArgumentSlotPrefix = "argument-slot-";
+
 export function ArgumentSlot({ idSuffix, blockId }: ArgumentSlotProps) {
   const { setNodeRef, isOver } = useDroppable({
-    id: `argument-slot-${idSuffix}`,
+    id: `${ArgumentSlotPrefix}${idSuffix}`,
   });
 
   const ChildBlock: ReactElement<BlockProps> | null = !blockId ? null : (

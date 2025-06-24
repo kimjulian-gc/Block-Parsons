@@ -26,7 +26,7 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
   // if a block is expandable, leave
   const minAmount = expandable ? minBase + 1 : minBase;
   const isConstant = minAmount === 0;
-  const args = ((): (string | undefined)[] => {
+  const args = ((): (string | null)[] => {
     if (!childBlocks) {
       return Array.from({ length: minAmount });
     }
@@ -37,7 +37,7 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
       Array.from({ length: minAmount - childBlocks.length }),
     );
   })();
-  console.log(args);
+  // console.log(args);
   // console.log(name, argumentOptions,args)
 
   return (

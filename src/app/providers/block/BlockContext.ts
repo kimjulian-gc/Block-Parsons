@@ -14,7 +14,7 @@ export const RootParents = {
 export interface BlockData {
   name: string;
   argumentOptions?: ArgumentOptions;
-  childBlocks?: string[];
+  childBlocks?: (string | null)[];
   parentId: string;
 }
 

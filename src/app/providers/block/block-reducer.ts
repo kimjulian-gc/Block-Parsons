@@ -1,7 +1,7 @@
-import { type BlockData, RootParents } from "./BlockContext.ts";
+import { type BlockData } from "./BlockContext.ts";
 import { Map } from "immutable";
 import { ArgumentSlotPrefix } from "../../../block/ArgumentSlot.tsx";
-import { SectionTitles } from "../../MainContent.tsx";
+import { SectionTitles } from "../../../common/utils.ts";
 
 const defineId = "define-id";
 const smallGreyId = "smallgrey-id";
@@ -17,7 +17,7 @@ export const startingBlockMap = Map<string, BlockData>([
       name: "define",
       argumentOptions: { minAmount: 2 },
       childBlocks: [smallGreyId, solidCircleId],
-      parentId: RootParents.SolutionBox,
+      parentId: SectionTitles.SolutionBox,
     },
   ],
   [
@@ -38,8 +38,8 @@ export const startingBlockMap = Map<string, BlockData>([
   ],
   [twentyId, { name: "20", parentId: solidCircleId }],
   [redId, { name: '"red"', parentId: solidCircleId }],
-  [squareId, { name: "square", parentId: RootParents.BlockLibrary }],
-  [fiveId, { name: "5", parentId: RootParents.BlockLibrary }],
+  [squareId, { name: "square", parentId: SectionTitles.BlockLibrary }],
+  [fiveId, { name: "5", parentId: SectionTitles.BlockLibrary }],
 ]);
 
 export type BlockDispatchType = {
@@ -91,8 +91,8 @@ export function blockReducer(
         return updatedState.setIn(
           [id, "parentId"],
           prefix === SectionTitles.BlockLibrary
-            ? RootParents.BlockLibrary
-            : RootParents.SolutionBox,
+            ? SectionTitles.BlockLibrary
+            : SectionTitles.SolutionBox,
         );
       }
       updatedState = updatedState.setIn([id, "parentId"], newParentId);

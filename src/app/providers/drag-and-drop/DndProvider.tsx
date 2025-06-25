@@ -37,7 +37,11 @@ export function DndProvider({ children }: PropsWithChildren) {
       }
       dispatch({
         type: "SET_PARENT",
-        payload: { id: active.id.toString(), parentId: newParentId },
+        payload: {
+          id: active.id.toString(),
+          parentId: newParentId,
+          dndInfo: { active, over },
+        },
       });
 
       setActiveId(null);

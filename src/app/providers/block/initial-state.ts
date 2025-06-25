@@ -41,3 +41,13 @@ export const startingBlockMap = Map<string, BlockData>([
   [squareId, { name: "square", parentId: SectionTitles.BlockLibrary }],
   [fiveId, { name: "5", parentId: SectionTitles.BlockLibrary }],
 ]);
+const initialTopLevel = startingBlockMap
+  .entrySeq()
+  .filter(([, data]) => data.parentId === SectionTitles.SolutionBox)
+  .map(([id]) => id)
+  .toList();
+
+export const initialState = {
+  blocks: startingBlockMap,
+  solutionTopLevel: initialTopLevel,
+};

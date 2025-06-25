@@ -1,4 +1,4 @@
-import { Block } from "../../../block/Block";
+import { Block } from "../../../block/Block.tsx";
 import { type PropsWithChildren, useCallback, useState } from "react";
 import {
   defaultKeyboardCoordinateGetter,

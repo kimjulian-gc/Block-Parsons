@@ -1,6 +1,6 @@
 import { Map } from "immutable";
 import type { BlockData } from "./BlockContext.ts";
-import { SectionTitles } from "../../../common/utils.ts";
+import { SectionTitles } from "../../utils.ts";
 
 // TODO: remove this testing default state
 const defineId = "define-id";

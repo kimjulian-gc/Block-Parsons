@@ -1,7 +1,7 @@
 import { List, Map } from "immutable";
 import type { BlockData } from "../BlockContext.ts";
 import { ArgumentSlotPrefix } from "../../../../block/ArgumentSlot.tsx";
-import { SectionTitles, throwNull } from "../../../../common/utils.ts";
+import { SectionTitles, throwNull } from "../../../utils.ts";
 import type { Active, Over } from "@dnd-kit/core";
 import type { BlockDispatchType } from "./block-reducer.ts";
 

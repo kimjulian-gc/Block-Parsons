@@ -3,7 +3,7 @@ import { ArgumentSlot } from "./ArgumentSlot.tsx";
 import { throwNull } from "../common/utils.ts";
 import { PresentationalArgumentSlot } from "./PresentationalArgumentSlot.tsx";
 import { useDndContext } from "@dnd-kit/core";
-import { useBlockContext } from "../app/providers/block/BlockContext.ts";
+import { useBlockContext } from "../common/providers/block/BlockContext.ts";
 
 export interface BlockProps {
   id: string;

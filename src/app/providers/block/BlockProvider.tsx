@@ -1,5 +1,5 @@
 import { type PropsWithChildren, useReducer } from "react";
-import { blockReducer } from "./block-reducer.ts";
+import { blockReducer } from "./reducer/block-reducer.ts";
 import { BlockContext } from "./BlockContext.ts";
 import { BlockDispatchContext } from "./BlockDispatchContext.ts";
 import { initialState } from "./initial-state.ts";

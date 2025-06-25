@@ -1,5 +1,5 @@
 import { type ActionDispatch, createContext, useContext } from "react";
-import type { BlockDispatchType } from "./block-reducer.ts";
+import type { BlockDispatchType } from "./reducer/block-reducer.ts";
 
 type BlockDispatchContextType = ActionDispatch<[action: BlockDispatchType]>;
 

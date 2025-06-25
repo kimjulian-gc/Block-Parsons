@@ -1,6 +1,6 @@
 import { Box, Button, Stack } from "@mui/material";
 import { Block } from "../block/Block.tsx";
-import { Draggable } from "../block/dnd/Draggable.tsx";
+import { Draggable } from "../common/dnd-wrappers/Draggable.tsx";
 import { useBlockContext } from "../common/providers/block/BlockContext.ts";
 import { SectionTitles } from "../common/utils.ts";
 

@@ -1,5 +1,5 @@
 import { Block } from "../block/Block.tsx";
-import { Sortable } from "../block/dnd/Sortable.tsx";
+import { Sortable } from "../common/dnd-wrappers/Sortable.tsx";
 import {
   SortableContext,
   verticalListSortingStrategy,

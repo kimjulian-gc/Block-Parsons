@@ -1,4 +1,8 @@
-import { type CollisionDetection, pointerWithin } from "@dnd-kit/core";
+import {
+  closestCenter,
+  type CollisionDetection,
+  pointerWithin,
+} from "@dnd-kit/core";
 import type { CollisionDescriptor } from "@dnd-kit/core/dist/utilities/algorithms/types";
 import { SectionTitles } from "../common/utils.ts";
 
@@ -10,19 +14,24 @@ export const collisionDetection: CollisionDetection = ({
   active,
   ...rest
 }) => {
-  const uiSections = pointerWithin({
+  const reconstructedArgs = {
     collisionRect,
     droppableRects,
     droppableContainers,
     active,
     ...rest,
-  }).filter((collision) =>
+  };
+  const pointerCollisions = pointerWithin(reconstructedArgs);
+  const centerCollisions = closestCenter(reconstructedArgs);
+  const sectionCollisions = (
+    pointerCollisions.length !== 0 ? pointerCollisions : centerCollisions
+  ).filter((collision) =>
     Object.values(SectionTitles).includes(collision.id.toString()),
   );
-  // console.log(uiSections);
-  if (uiSections.length === 0) return [];
-  if (uiSections[0].id === SectionTitles.BlockLibrary) {
-    return [uiSections[0]];
+  // console.log(sectionCollisions);
+  if (sectionCollisions.length === 0) return [];
+  if (sectionCollisions[0].id === SectionTitles.BlockLibrary) {
+    return [sectionCollisions[0]];
   }
 
   const collisions: CollisionDescriptor[] = [];
@@ -43,9 +52,8 @@ export const collisionDetection: CollisionDetection = ({
     collisions.push({ id, data: { droppableContainer, value: dist } });
   }
 
-  // notice that since the initial BlockLibrary guard
-  // did not early return, we are probably dropping in solution box.
-  // console.warn(noBlockLibrary);
+  // notice that since the initial BlockLibrary guard did not
+  // early return, we are probably dropping in SolutionBox.
   return collisions
     .sort((a, b) => a.data.value - b.data.value)
     .filter(

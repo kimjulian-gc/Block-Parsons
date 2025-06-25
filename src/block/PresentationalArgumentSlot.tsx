@@ -6,7 +6,7 @@ import type { ArgumentSlotProps } from "./ArgumentSlot.tsx";
 
 export function PresentationalArgumentSlot({ blockId }: ArgumentSlotProps) {
   const ChildBlock: ReactElement<BlockProps> | null = !blockId ? null : (
-    <Block id={blockId} />
+    <Block id={blockId} presentational={true} />
   );
   return (
     <Box

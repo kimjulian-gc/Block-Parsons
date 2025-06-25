@@ -7,18 +7,21 @@ export const collisionDetection: CollisionDetection = ({
   collisionRect,
   droppableRects,
   droppableContainers,
+  active,
   ...rest
 }) => {
   const uiSections = pointerWithin({
     collisionRect,
     droppableRects,
     droppableContainers,
+    active,
     ...rest,
   }).filter((collision) =>
     Object.values(SectionTitles).includes(collision.id.toString()),
   );
   // console.log(uiSections);
-  if (uiSections[0] && uiSections[0].id === SectionTitles.BlockLibrary) {
+  if (uiSections.length === 0) return [];
+  if (uiSections[0].id === SectionTitles.BlockLibrary) {
     return [uiSections[0]];
   }
 
@@ -40,6 +43,12 @@ export const collisionDetection: CollisionDetection = ({
     collisions.push({ id, data: { droppableContainer, value: dist } });
   }
 
-  // console.warn(sorted);
-  return collisions.sort((a, b) => a.data.value - b.data.value);
+  // notice that since the initial BlockLibrary guard
+  // did not early return, we are probably dropping in solution box.
+  // console.warn(noBlockLibrary);
+  return collisions
+    .sort((a, b) => a.data.value - b.data.value)
+    .filter(
+      (collision) => collision.id.toString() !== SectionTitles.BlockLibrary,
+    );
 };

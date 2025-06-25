@@ -102,8 +102,8 @@ function setTopLevelParent(
 
 function handleSetParent(
   action: BlockDispatchType,
-  blocks: any,
-  solutionTopLevel: any,
+  blocks: Map<string, BlockData>,
+  solutionTopLevel: List<string>,
 ) {
   const {
     id,

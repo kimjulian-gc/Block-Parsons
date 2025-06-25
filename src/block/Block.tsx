@@ -11,7 +11,7 @@ export interface BlockProps {
 }
 
 export function Block({ id, presentational: presentationalProp }: BlockProps) {
-  const blocks = useBlockContext();
+  const { blocks } = useBlockContext();
   const { childBlocks, name, argumentOptions } =
     blocks.get(id.toString()) ??
     throwNull(`attempted to render unknown block ${id}`);

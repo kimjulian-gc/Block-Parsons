@@ -1,5 +1,5 @@
 import { createContext, useContext } from "react";
-import { Map } from "immutable";
+import { List, Map } from "immutable";
 
 interface ArgumentOptions {
   minAmount: number;
@@ -13,7 +13,10 @@ export interface BlockData {
   parentId: string;
 }
 
-type BlockContextType = Map<string, BlockData>;
+export interface BlockContextType {
+  blocks: Map<string, BlockData>;
+  solutionTopLevel: List<string>;
+}
 
 export const BlockContext = createContext<BlockContextType | null>(null);
 

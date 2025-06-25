@@ -5,7 +5,7 @@ import { useBlockContext } from "../app/providers/block/BlockContext.ts";
 import { SectionTitles } from "../common/utils.ts";
 
 export function BlockLibrary() {
-  const blocks = useBlockContext();
+  const { blocks } = useBlockContext();
   const libraryBlocks = blocks.filter(
     (block) => block.parentId === SectionTitles.BlockLibrary,
   );

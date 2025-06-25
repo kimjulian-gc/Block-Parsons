@@ -10,7 +10,7 @@ export interface ArgumentSlotProps {
   blockId?: string | null;
 }
 
-export const ArgumentSlotPrefix = "argument-slot-";
+export const ArgumentSlotPrefix = "argument slot of ";
 
 export function ArgumentSlot({ idSuffix, blockId }: ArgumentSlotProps) {
   const { setNodeRef, isOver } = useDroppable({

@@ -6,7 +6,7 @@ import { SectionTitles } from "../common/utils.ts";
 
 export function MainContent() {
   return (
-    <Stack direction={"row"} spacing={2}>
+    <Stack direction={"row"} spacing={2} justifyContent={"center"}>
       <TitledSection title={SectionTitles.BlockLibrary}>
         <BlockLibrary />
       </TitledSection>

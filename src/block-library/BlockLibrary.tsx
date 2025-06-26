@@ -1,4 +1,4 @@
-import { Box, Button, Stack } from "@mui/material";
+import { Button, Stack } from "@mui/material";
 import { Block } from "../block/Block.tsx";
 import { Draggable } from "../common/dnd-wrappers/Draggable.tsx";
 import { useBlockContext } from "../common/providers/block/BlockContext.ts";
@@ -32,14 +32,18 @@ export function BlockLibrary() {
   // };
 
   return (
-    <Box>
+    <Stack>
       <Stack
         border={"2px solid black"}
         borderRadius={"0.5em"}
-        padding={"1em"}
+        padding={"0.5em"}
+        boxSizing={"border-box"}
         width={"fit-content"}
+        minHeight={"2em"}
+        minWidth={"100%"}
         aria-label="Block Library"
-        spacing={2}
+        spacing={1}
+        justifyContent={"space-evenly"}
       >
         {libraryBlocks.keySeq().map((id) => (
           <Draggable key={id} id={id}>
@@ -55,6 +59,6 @@ export function BlockLibrary() {
       </Stack>
       {/*<Typography> Number of attempts: {count} </Typography>*/}
       {/*<Typography> Timer: {Math.floor(timeTaken / 1000)} </Typography>*/}
-    </Box>
+    </Stack>
   );
 }

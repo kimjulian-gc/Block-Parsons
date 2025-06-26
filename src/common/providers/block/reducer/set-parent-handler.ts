@@ -97,6 +97,9 @@ export function handleSetParent(
   blocks: Map<string, BlockData>,
   solutionTopLevel: List<string>,
 ) {
+  if (action.type !== "SET_PARENT") {
+    throw new Error("expected SET_PARENT action");
+  }
   const {
     id,
     parentId,

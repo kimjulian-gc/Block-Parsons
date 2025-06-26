@@ -159,7 +159,7 @@ export function handleSetParent(
   }
 
   console.log("swapping", ogIndex);
-  if (Object.values(SectionTitles).includes(ogParentId)) {
+  if (ogParentId === SectionTitles.SolutionBox) {
     // top level swap
     console.warn("top level swap");
     // add temp to top level

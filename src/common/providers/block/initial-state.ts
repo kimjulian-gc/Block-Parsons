@@ -1,6 +1,6 @@
 import { Map } from "immutable";
 import type { BlockData } from "./BlockContext.ts";
-import { SectionTitles } from "../../utils.ts";
+import { newUUID, SectionTitles } from "../../utils.ts";
 
 // TODO: remove this testing default state
 const defineId = "define-id";
@@ -40,6 +40,14 @@ export const startingBlockMap = Map<string, BlockData>([
   [redId, { name: '"red"', parentId: solidCircleId }],
   [squareId, { name: "square", parentId: SectionTitles.BlockLibrary }],
   [fiveId, { name: "5", parentId: SectionTitles.BlockLibrary }],
+  [
+    newUUID(),
+    {
+      name: "+",
+      parentId: SectionTitles.BlockLibrary,
+      argumentOptions: { minAmount: 2 },
+    },
+  ],
 ]);
 const initialTopLevel = startingBlockMap
   .entrySeq()

@@ -147,8 +147,8 @@ export function handleSetParent(
   const tempId = parentChildBlocks[slotIndex];
   parentChildBlocks[slotIndex] = id;
   updatedBlockMap = updatedBlockMap.setIn(
-    [newParentId, "childBlocks", slotIndex],
-    id,
+    [newParentId, "childBlocks"],
+    parentChildBlocks,
   );
 
   if (!tempId) {

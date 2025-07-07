@@ -5,6 +5,17 @@ import { BlockLibrary } from "../block-library/BlockLibrary.tsx";
 import { SolutionBox } from "../solution-box/SolutionBox.tsx";
 import { SectionTitles } from "../common/utils.ts";
 
+function formatTime(ms: number) {
+  const hours = Math.floor(ms / (3600 * 1000));
+  const minutes = Math.floor((ms % (3600 * 1000)) / (60 * 1000));
+  const seconds = Math.floor((ms % (60 * 1000)) / 1000);
+  const milliseconds = ms % 1000;
+
+  const pad = (n: number, z = 2) => n.toString().padStart(z, "0");
+
+  return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+}
+
 export function MainContent() {
   const [timeTaken, setTimeTaken] = useState(0);
   const [count, setCount] = useState(0);
@@ -41,7 +52,7 @@ export function MainContent() {
         <Button>Reset</Button>
       </Stack>
         <Typography>Attempts: {count}</Typography>
-        <Typography>Timer: {Math.floor(timeTaken / 1000)}s</Typography>
+        <Typography> Time Taken: {formatTime(timeTaken)} </Typography>
       </Stack>
 
   );

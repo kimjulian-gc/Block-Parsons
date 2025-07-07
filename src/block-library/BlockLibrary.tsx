@@ -10,26 +10,7 @@ export function BlockLibrary() {
     (block) => block.parentId === SectionTitles.BlockLibrary,
   );
 
-  // TODO: add back later
-  // const [timeTaken, setTimeTaken] = useState(0);
-  // const [count, setCount] = useState(0);
-  // const [, setStartTime] = useState<number | null>(null);
-  //
-  // useEffect(() => {
-  //   const start = Date.now();
-  //   setStartTime(start);
-  //   const interval = setInterval(() => {
-  //     setTimeTaken(Date.now() - start);
-  //   }, 1000);
-  //
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, []);
-  //
-  // const checkPressed = () => {
-  //   setCount(count + 1);
-  // };
+
 
   return (
     <Stack>
@@ -51,13 +32,7 @@ export function BlockLibrary() {
         ))}
       </Stack>
       <Stack direction="row" spacing={1}>
-        {/*<Button onClick={checkPressed} color={"secondary"}>*/}
-        {/*  Check*/}
-        {/*</Button>*/}
-        {/*<Button> Reset </Button>*/}
       </Stack>
-      {/*<Typography> Number of attempts: {count} </Typography>*/}
-      {/*<Typography> Timer: {Math.floor(timeTaken / 1000)} </Typography>*/}
     </Stack>
   );
 }

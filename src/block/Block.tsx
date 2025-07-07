@@ -50,8 +50,10 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
       spacing={1}
       useFlexGap
     >
-      {isConstant ? null : "("}
-      {name}
+
+      <Stack direction="row" spacing={1} alignItems="center" flexWrap="wrap">
+        {isConstant ? null : "("}
+        {name}
       {args.map((blockId, index) => {
         const idSuffix = `${name}:${id}:${index.toString()}`;
         const propsToPass = {
@@ -79,6 +81,7 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
           ChildBlock
         );
       })}
+    </Stack>
     </Stack>
   );
 }

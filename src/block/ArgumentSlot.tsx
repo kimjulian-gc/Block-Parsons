@@ -4,6 +4,7 @@ import { Block, type BlockProps } from "./Block.tsx";
 import { useDroppable } from "@dnd-kit/core";
 import { Draggable } from "../common/dnd-wrappers/Draggable.tsx";
 import type { ReactElement } from "react";
+import { ArgumentSlotStyles } from "./argument-slot-styles.ts";
 
 export interface ArgumentSlotProps {
   idSuffix: string;
@@ -22,14 +23,8 @@ export function ArgumentSlot({ idSuffix, blockId }: ArgumentSlotProps) {
   );
   return (
     <Box
-      width={"fit-content"}
-      minWidth={"2em"}
-      minHeight={"0.5em"}
-      bgcolor={"white"}
-      padding={"0.5em"}
-      borderRadius={"0.5em"}
-      marginLeft={"1em"}
-      aria-label={BlockLabels.PresentationalArgumentSlot}
+      {...ArgumentSlotStyles}
+      aria-label={BlockLabels.ArgumentSlot}
       ref={setNodeRef}
       {...(isOver
         ? {

@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 import { List, Map } from "immutable";
 
-interface ArgumentOptions {
+export interface ArgumentOptions {
   minAmount: number;
   expandable?: boolean;
 }

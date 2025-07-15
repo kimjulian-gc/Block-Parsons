@@ -12,73 +12,65 @@ export interface BlockProps {
 
 export function Block({ id, presentational: presentationalProp }: BlockProps) {
   const { blocks } = useBlockContext();
-  const { childBlocks, name, argumentOptions } =
-    blocks.get(id.toString()) ??
-    throwNull(`attempted to render unknown block ${id}`);
+  const block = blocks.get(id) ?? throwNull(`attempted to render unknown block ${id}`);
 
   const { active } = useDndContext();
-  const presentational = presentationalProp || active?.id === id.toString();
+  const presentational = presentationalProp || active?.id === id;
 
-  // minBase is min number of arguments
-  const minBase = argumentOptions?.minAmount ?? 0;
-  // check if a block is expandable
-  const expandable = argumentOptions?.expandable ?? false;
-  // if a block is expandable, leave
-  const minAmount = expandable ? minBase + 1 : minBase;
-  const isConstant = minAmount === 0;
-  const args = ((): (string | null)[] => {
-    if (!childBlocks) {
-      return Array.from({ length: minAmount });
-    }
-    if (childBlocks.length > minAmount) {
-      return childBlocks;
-    }
-    return childBlocks.concat(
-      Array.from({ length: minAmount - childBlocks.length }),
+  if (block.type === "constant") {
+    return (
+      <Box
+        bgcolor={"lightgreen"}
+        padding={"0.5em"}
+        borderRadius={"0.5em"}
+        fontFamily={"monospace"}
+      >
+        {block.value}
+      </Box>
     );
-  })();
-  // console.log(args);
-  // console.log(name, argumentOptions,args)
+  }else {
+    const args = block.children;
+    return (
+      <Stack
+        width={"fit-content"}
+        bgcolor={"lightgray"}
+        padding={"0.5em"}
+        borderRadius={"0.5em"}
+        fontFamily={"monospace"}
+        spacing={1}
+        useFlexGap
+      >
+        {"("}
+        {args.map((slot, index) => {
+          const idSuffix = id;
+          const propsToPass = {
+            idSuffix,
+            blockId: slot?.id ?? null,
+          };
+          const ChildBlock = presentational ? (
+            <PresentationalArgumentSlot {...propsToPass} />
+          ) : (
+            <ArgumentSlot {...propsToPass} />
+          );
+          return (
+            <Stack direction={"row"} alignItems={"flex-end"} key={index}>
+              {ChildBlock}
+              {index === args.length - 1 && (
+                <Box
+                  marginLeft={"0.25em"}
+                  {...(slot?.id && blocks.has(slot.id)
+                    ? { marginBottom: "1em" }
+                    : {})}
+                >
+                  {")"}
+                </Box>
+              )}
+            </Stack>
+          );
+        })}
+      </Stack>
+    );
+  }
 
-  return (
-    <Stack
-      width={"fit-content"}
-      bgcolor={isConstant ? "lightgreen" : "lightgray"}
-      padding={"0.5em"}
-      borderRadius={"0.5em"}
-      fontFamily={"monospace"}
-      spacing={1}
-      useFlexGap
-    >
-      {isConstant ? null : "("}
-      {name}
-      {args.map((blockId, index) => {
-        const idSuffix = `${name}:${id}:${index.toString()}`;
-        const propsToPass = {
-          idSuffix,
-          blockId,
-        };
-        const ChildBlock = presentational ? (
-          <PresentationalArgumentSlot {...propsToPass} key={index} />
-        ) : (
-          <ArgumentSlot {...propsToPass} key={index} />
-        );
-        return index === args.length - 1 ? (
-          <Stack direction={"row"} alignItems={"flex-end"} key={index}>
-            {ChildBlock}{" "}
-            <Box
-              marginLeft={"0.25em"}
-              {...(blockId && blocks.has(blockId)
-                ? { marginBottom: "1em" }
-                : null)}
-            >
-              )
-            </Box>
-          </Stack>
-        ) : (
-          ChildBlock
-        );
-      })}
-    </Stack>
-  );
+  return null;
 }

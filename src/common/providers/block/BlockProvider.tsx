@@ -10,8 +10,8 @@ export function BlockProvider({ children }: PropsWithChildren) {
   // console.log(blockMap);
 
   return (
-    <BlockContext value={state}>
-      <BlockDispatchContext value={dispatch}>{children}</BlockDispatchContext>
-    </BlockContext>
+    <BlockContext.Provider value={state}>
+      <BlockDispatchContext.Provider value={dispatch}>{children}</BlockDispatchContext.Provider>
+    </BlockContext.Provider>
   );
 }

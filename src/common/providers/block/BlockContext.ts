@@ -1,17 +1,18 @@
 import { createContext, useContext } from "react";
 import { List, Map } from "immutable";
+import type { BlockData } from "./BlockTypes.ts";
 
 export interface ArgumentOptions {
   minAmount: number;
   expandable?: boolean;
 }
 
-export interface BlockData {
-  name: string;
-  argumentOptions?: ArgumentOptions;
-  childBlocks?: (string | null)[];
-  parentId: string;
-}
+// export interface BlockData {
+//   name: string;
+//   argumentOptions?: ArgumentOptions;
+//   childBlocks?: (string | null)[];
+//   parentId: string;
+// }
 
 export interface BlockContextType {
   blocks: Map<string, BlockData>;

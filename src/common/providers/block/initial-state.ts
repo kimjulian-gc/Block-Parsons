@@ -1,6 +1,7 @@
-import { Map } from "immutable";
+import { List, Map } from "immutable";
 import type { BlockData } from "./BlockContext.ts";
 import { newUUID, SectionTitles } from "../../utils.ts";
+import { generateFromScamper } from "../../../problem-gen/gen-utils.ts";
 
 // TODO: remove this testing default state
 const defineId = "define-id";
@@ -49,13 +50,13 @@ export const startingBlockMap = Map<string, BlockData>([
     },
   ],
 ]);
-const initialTopLevel = startingBlockMap
-  .entrySeq()
-  .filter(([, data]) => data.parentId === SectionTitles.SolutionBox)
-  .map(([id]) => id)
-  .toList();
+// const initialTopLevel = startingBlockMap
+//   .entrySeq()
+//   .filter(([, data]) => data.parentId === SectionTitles.SolutionBox)
+//   .map(([id]) => id)
+//   .toList();
 
 export const initialState = {
-  blocks: startingBlockMap,
-  solutionTopLevel: initialTopLevel,
+  blocks: generateFromScamper("(+ 1 (+ 2 3))(- 1 2)"),
+  solutionTopLevel: List<string>(),
 };

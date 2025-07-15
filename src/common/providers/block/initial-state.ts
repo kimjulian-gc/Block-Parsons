@@ -1,5 +1,5 @@
 import { List, Map } from "immutable";
-import type { BlockData} from'./BlockTypes';
+import type { BlockData } from "./BlockTypes";
 // import { newUUID, SectionTitles } from "../../utils.ts";
 // import { generateFromScamper } from "../../../problem-gen/gen-utils.ts";
 
@@ -56,37 +56,33 @@ import type { BlockData} from'./BlockTypes';
 //   .map(([id]) => id)
 //   .toList();
 
-const plusId="plus";
-const oneId="1";
+const plusId = "plus";
+const oneId = "1";
 
-const addExprId="add-expr";
+const addExprId = "add-expr";
 
-
-
-export const initialState={
+export const initialState = {
   blocks: Map<string, BlockData>({
     [plusId]: {
-      type:"constant",
-      value:"+"
+      type: "constant",
+      value: "+",
     },
     [oneId]: {
-      type:"constant",
+      type: "constant",
       value: "1",
     },
-    [addExprId]:{
+    [addExprId]: {
       type: "containsEntries",
       children: [
-
-        { id: plusId, locked: true},
-        {id: oneId, locked: false},
+        { id: plusId, locked: true },
+        { id: oneId, locked: false },
         null,
       ],
       expandable: true,
-
     },
   }),
-  solutionTopLevel:List<string>(["add-expr"]),
-  };
+  solutionTopLevel: List<string>(["add-expr"]),
+};
 
 // export const initialState = {
 //   blocks: generateFromScamper("(+ 1 (+ 2 3))(- 1 2)"),

@@ -11,7 +11,9 @@ export function BlockProvider({ children }: PropsWithChildren) {
 
   return (
     <BlockContext.Provider value={state}>
-      <BlockDispatchContext.Provider value={dispatch}>{children}</BlockDispatchContext.Provider>
+      <BlockDispatchContext.Provider value={dispatch}>
+        {children}
+      </BlockDispatchContext.Provider>
     </BlockContext.Provider>
   );
 }

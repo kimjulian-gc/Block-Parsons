@@ -12,7 +12,8 @@ export interface BlockProps {
 
 export function Block({ id, presentational: presentationalProp }: BlockProps) {
   const { blocks } = useBlockContext();
-  const block = blocks.get(id) ?? throwNull(`attempted to render unknown block ${id}`);
+  const block =
+    blocks.get(id) ?? throwNull(`attempted to render unknown block ${id}`);
 
   const { active } = useDndContext();
   const presentational = presentationalProp || active?.id === id;
@@ -28,7 +29,7 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
         {block.value}
       </Box>
     );
-  }else {
+  } else {
     const args = block.children;
     return (
       <Stack
@@ -71,6 +72,4 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
       </Stack>
     );
   }
-
-  return null;
 }

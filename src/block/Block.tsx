@@ -30,47 +30,48 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
         {block.value}
       </Box>
     );
-  } else {
-    const args = block.children;
-    return (
-      <Stack
-        width={"fit-content"}
-        bgcolor={"lightgray"}
-        padding={"0.5em"}
-        borderRadius={"0.5em"}
-        fontFamily={"monospace"}
-        spacing={1}
-        useFlexGap
-      >
-        {"("}
-        {args.map((slot, index) => {
-          const idSuffix = id;
-          const propsToPass = {
-            idSuffix,
-            blockId: slot?.id ?? null,
-          };
-          const ChildBlock = presentational ? (
-            <PresentationalArgumentSlot {...propsToPass} />
-          ) : (
-            <ArgumentSlot {...propsToPass} />
-          );
-          return (
-            <Stack direction={"row"} alignItems={"flex-end"} key={index}>
-              {ChildBlock}
-              {index === args.length - 1 && (
-                <Box
-                  marginLeft={"0.25em"}
-                  {...(slot?.id && blocks.has(slot.id)
-                    ? { marginBottom: "1em" }
-                    : {})}
-                >
-                  {")"}
-                </Box>
-              )}
-            </Stack>
-          );
-        })}
-      </Stack>
-    );
   }
+
+  // isBlockWithChildren
+  const args = block.children;
+  return (
+    <Stack
+      width={"fit-content"}
+      bgcolor={"lightgray"}
+      padding={"0.5em"}
+      borderRadius={"0.5em"}
+      fontFamily={"monospace"}
+      spacing={1}
+      useFlexGap
+    >
+      {"("}
+      {args.map((slot, index) => {
+        const idSuffix = id;
+        const propsToPass = {
+          idSuffix,
+          blockId: slot?.id ?? null,
+        };
+        const ChildBlock = presentational ? (
+          <PresentationalArgumentSlot {...propsToPass} />
+        ) : (
+          <ArgumentSlot {...propsToPass} />
+        );
+        return (
+          <Stack direction={"row"} alignItems={"flex-end"} key={index}>
+            {ChildBlock}
+            {index === args.length - 1 && (
+              <Box
+                marginLeft={"0.25em"}
+                {...(slot?.id && blocks.has(slot.id)
+                  ? { marginBottom: "1em" }
+                  : {})}
+              >
+                {")"}
+              </Box>
+            )}
+          </Stack>
+        );
+      })}
+    </Stack>
+  );
 }

@@ -46,10 +46,10 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
     >
       {"("}
       {args.map((slot, index) => {
-        const idSuffix = id;
+        const idSuffix = `:${id}:${index.toString()}`;
         const propsToPass = {
           idSuffix,
-          blockId: slot?.id ?? null,
+          blockId: slot.id ?? null,
         };
         const ChildBlock = presentational ? (
           <PresentationalArgumentSlot {...propsToPass} />
@@ -62,7 +62,7 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
             {index === args.length - 1 && (
               <Box
                 marginLeft={"0.25em"}
-                {...(slot?.id && blocks.has(slot.id)
+                {...(slot.id && blocks.has(slot.id)
                   ? { marginBottom: "1em" }
                   : {})}
               >

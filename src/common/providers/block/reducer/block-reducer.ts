@@ -1,5 +1,7 @@
 import type { Active, Over } from "@dnd-kit/core";
 import type { BlockContextType } from "../BlockContext.ts";
+import type { Draft } from "immer";
+import type { ImmerReducer } from "use-immer";
 import { handleSetParent } from "./set-parent-handler.ts";
 import { initialState } from "../initial-state.ts";
 
@@ -16,17 +18,19 @@ export type BlockDispatchType =
       type: "RESET";
     };
 
-export function blockReducer(
-  { blocks, solutionTopLevel }: BlockContextType,
+export const blockReducer: ImmerReducer<BlockContextType, BlockDispatchType> = (
+  draft: Draft<BlockContextType>,
   action: BlockDispatchType,
-): BlockContextType {
+) => {
   switch (action.type) {
     // TODO: add more cases, for now ignore eslint
     case "SET_PARENT": {
-      return handleSetParent(action, blocks, solutionTopLevel);
+      handleSetParent(draft, action);
+      console.log(draft.solutionTopLevel);
+      return;
     }
     case "RESET": {
       return initialState;
     }
   }
-}
+};

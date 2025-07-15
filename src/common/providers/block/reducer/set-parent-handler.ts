@@ -1,74 +1,151 @@
-import { List, Map } from "immutable";
-import type { BlockData } from "../BlockContext.ts";
+import type { BlockContextType } from "../BlockContext.ts";
 import { ArgumentSlotPrefix } from "../../../../block/ArgumentSlot.tsx";
 import { SectionTitles, throwNull } from "../../../utils.ts";
 import type { Active, Over } from "@dnd-kit/core";
 import type { BlockDispatchType } from "./block-reducer.ts";
+import type { Draft } from "immer";
+import { type BlockData, isBlockWithChildren } from "../block-types.ts";
 
-function removeChildFromParent(
-  child: BlockData,
-  blocks: Map<string, BlockData>,
-  id: string,
-) {
-  const ogParentId = child.parentId;
-  const ogParent = blocks.get(ogParentId);
-  const ogChildBlocks = ogParent?.childBlocks;
-  let ogIndex: number | null = null;
-  let updatedBlockMap = blocks;
-  if (ogChildBlocks && (ogIndex = ogChildBlocks.indexOf(id)) > -1) {
-    console.log("removing from ogChildBlocks");
-    // if (ogIndex === ogChildBlocks.length - 1) {
-    //   ogChildBlocks.pop();
-    // } else {
-    const modifiedBlocks = [...ogChildBlocks];
-    modifiedBlocks[ogIndex] = null;
-    // }
-    updatedBlockMap = updatedBlockMap.setIn(
-      [ogParentId, "childBlocks"],
-      modifiedBlocks,
-    );
-    // console.log(updatedState.get(ogParentId)?.childBlocks);
+export function handleSetParent(
+  draft: Draft<BlockContextType>,
+  action: BlockDispatchType,
+): void {
+  const blocks = draft.blocks;
+  const solutionTopLevel: Draft<string[]> = draft.solutionTopLevel;
+  if (action.type !== "SET_PARENT") {
+    throw new Error("expected SET_PARENT action");
   }
-  return { ogParentId, ogChildBlocks, ogIndex, updatedBlockMap };
+  const {
+    id,
+    parentId,
+    dndInfo: { active, over },
+  } = action.payload;
+  console.log(id, parentId);
+
+  const child = blocks.get(id);
+  if (!child) {
+    throw new Error(`attempted to set parent of unknown block ${id}`);
+  }
+  const originalParentId = child.parentId;
+
+  const [prefix, ...suffix] = parentId.split(":");
+
+  // remove child from original parent's child blocks
+  const originalIndex = removeChildFromParent(child, blocks, id);
+  // remove child from solution top level if exists
+  const { originalTopLevelIndex, updatedTopLevel } = removeChildFromTopLevel(
+    solutionTopLevel,
+    id,
+  );
+
+  // set new parent
+  if (!prefix.startsWith(ArgumentSlotPrefix)) {
+    // new parent is top level
+    const newTopLevel = setTopLevelParent(
+      prefix,
+      blocks,
+      id,
+      updatedTopLevel,
+      active,
+      over,
+    );
+    console.log("new top level", newTopLevel);
+    draft.solutionTopLevel = [...newTopLevel];
+    return;
+  }
+
+  const [newParentId, parsedSlotIndex] = suffix;
+  const slotIndex = Number(parsedSlotIndex);
+  // check for invalid swap first
+  const newParent = blocks.get(newParentId);
+  if (!newParent || !parsedSlotIndex || !isBlockWithChildren(newParent)) {
+    throw new Error("new parent not found or has no children?");
+  }
+  const parentChildren = newParent.children;
+  const tempId = parentChildren[slotIndex].id;
+  if (tempId === originalParentId) {
+    // don't allow swap with original parent
+    console.warn("ignoring attempted swap with original parent");
+    return;
+  }
+  child.parentId = newParentId;
+  // potential swap
+  parentChildren[slotIndex].id = id;
+  if (!tempId) {
+    // no swap required
+    draft.solutionTopLevel = updatedTopLevel;
+    return;
+  }
+  console.log("swapping", originalIndex);
+  if (originalParentId === SectionTitles.SolutionBox) {
+    // top level swap
+    console.warn("top level swap");
+    // add temp to top level
+    updatedTopLevel.splice(originalTopLevelIndex, 0, tempId);
+  } else if (originalIndex > -1) {
+    // update ogChildBlocks
+    console.warn("updating old parent's children");
+    parentChildren[originalIndex].id = tempId;
+  }
+  const swappedBlock =
+    blocks.get(tempId) ?? throwNull(`temp block ${tempId} not found?`);
+  swappedBlock.parentId = originalParentId;
+
+  draft.solutionTopLevel = updatedTopLevel;
 }
 
-function removeChildFromTopLevel(solutionTopLevel: List<string>, id: string) {
-  const ogTopLevelIndex = solutionTopLevel.indexOf(id);
-  const updatedTopLevel = solutionTopLevel.filterNot(
-    (blockId) => blockId === id,
-  );
-  return { ogTopLevelIndex, updatedTopLevel };
+function removeChildFromParent(
+  child: Draft<BlockData>,
+  blocks: Draft<BlockContextType["blocks"]>,
+  id: string,
+): number {
+  const parentId = child.parentId;
+  const parentData = blocks.get(parentId);
+  if (!parentData || !isBlockWithChildren(parentData)) {
+    // probably a top level block
+    return -1;
+  }
+  const parentChildren = parentData.children;
+  const originalIndex = parentChildren.findIndex((slot) => slot.id === id);
+  if (originalIndex === -1) {
+    return originalIndex;
+  }
+  console.log("removing from old parent's children");
+  parentChildren[originalIndex].id = null;
+  return originalIndex;
+}
+
+function removeChildFromTopLevel(
+  solutionTopLevel: readonly string[],
+  id: string,
+) {
+  const originalTopLevelIndex = solutionTopLevel.indexOf(id);
+  const updatedTopLevel = solutionTopLevel.filter((blockId) => blockId !== id);
+  return { originalTopLevelIndex, updatedTopLevel };
 }
 
 function setTopLevelParent(
   sectionTitle: string,
-  updatedBlockMap: Map<string, BlockData>,
+  blocks: Draft<BlockContextType["blocks"]>,
   id: string,
-  updatedTopLevel: List<string>,
+  updatedTopLevel: string[],
   active: Active | null,
   over: Over | null,
 ) {
   // top-level block
   console.warn("new parent top level", sectionTitle);
+  const parentData =
+    blocks.get(id) ?? throwNull(`parent block ${id} not found?`);
   if (sectionTitle === SectionTitles.BlockLibrary) {
-    return {
-      blocks: updatedBlockMap.setIn(
-        [id, "parentId"],
-        SectionTitles.BlockLibrary,
-      ),
-      solutionTopLevel: updatedTopLevel,
-    };
+    parentData.parentId = SectionTitles.BlockLibrary;
+    return updatedTopLevel;
   }
   // otherwise top level solution box
+  parentData.parentId = SectionTitles.SolutionBox;
   if (sectionTitle === SectionTitles.SolutionBox) {
     // push to end of solution box
-    return {
-      blocks: updatedBlockMap.setIn(
-        [id, "parentId"],
-        SectionTitles.SolutionBox,
-      ),
-      solutionTopLevel: updatedTopLevel.push(id),
-    };
+    updatedTopLevel.push(id);
+    return updatedTopLevel;
   }
   if (!active || !over) {
     throw new Error(
@@ -86,96 +163,5 @@ function setTopLevelParent(
   const offset = sortAfter ? 1 : 0;
   console.warn("sorting in place", overSortIndex, sortAfter);
 
-  return {
-    blocks: updatedBlockMap.setIn([id, "parentId"], SectionTitles.SolutionBox),
-    solutionTopLevel: updatedTopLevel.splice(overSortIndex + offset, 0, id),
-  };
-}
-
-export function handleSetParent(
-  action: BlockDispatchType,
-  blocks: Map<string, BlockData>,
-  solutionTopLevel: List<string>,
-) {
-  if (action.type !== "SET_PARENT") {
-    throw new Error("expected SET_PARENT action");
-  }
-  const {
-    id,
-    parentId,
-    dndInfo: { active, over },
-  } = action.payload;
-  console.log(id, parentId);
-  const child = blocks.get(id);
-  if (!child) {
-    throw new Error(`attempted to set parent of unknown block ${id}`);
-  }
-  // remove child from original parent's child blocks
-  const { ogParentId, ogChildBlocks, ogIndex, ...removeParentRest } =
-    removeChildFromParent(child, blocks, id);
-  // remove child from solution top level if exists
-  const { ogTopLevelIndex, ...removeTopLevelRest } = removeChildFromTopLevel(
-    solutionTopLevel,
-    id,
-  );
-
-  let { updatedBlockMap } = removeParentRest;
-  let { updatedTopLevel } = removeTopLevelRest;
-
-  // set new parent
-  const [prefix, ...suffix] = parentId.split(":");
-  if (!prefix.startsWith(ArgumentSlotPrefix)) {
-    return setTopLevelParent(
-      prefix,
-      updatedBlockMap,
-      id,
-      updatedTopLevel,
-      active,
-      over,
-    );
-  }
-
-  const [newParentId, parsedSlotIndex] = suffix;
-  updatedBlockMap = updatedBlockMap.setIn([id, "parentId"], newParentId);
-  const newParent = updatedBlockMap.get(newParentId);
-  if (!newParent || !parsedSlotIndex) {
-    throw new Error("new parent not found?");
-  }
-  const parentChildBlocks = [...(newParent.childBlocks ?? [])];
-  // potential swap
-  const slotIndex = Number(parsedSlotIndex);
-  const tempId = parentChildBlocks[slotIndex];
-  parentChildBlocks[slotIndex] = id;
-  updatedBlockMap = updatedBlockMap.setIn(
-    [newParentId, "childBlocks"],
-    parentChildBlocks,
-  );
-
-  if (!tempId) {
-    // no swap required
-    return { blocks: updatedBlockMap, solutionTopLevel: updatedTopLevel };
-  }
-  if (tempId === ogParentId) {
-    // don't allow swap with original parent
-    console.warn("ignoring attempted swap with original parent");
-    return { blocks, solutionTopLevel };
-  }
-
-  console.log("swapping", ogIndex);
-  if (ogParentId === SectionTitles.SolutionBox) {
-    // top level swap
-    console.warn("top level swap");
-    // add temp to top level
-    updatedTopLevel = updatedTopLevel.splice(ogTopLevelIndex, 0, tempId);
-  } else if (ogChildBlocks && ogIndex !== null && ogIndex > -1) {
-    // update ogChildBlocks
-    console.warn("updating original child blocks");
-    updatedBlockMap = updatedBlockMap.setIn(
-      [ogParentId, "childBlocks", ogIndex],
-      tempId,
-    );
-  }
-  updatedBlockMap = updatedBlockMap.setIn([tempId, "parentId"], ogParentId);
-
-  return { blocks: updatedBlockMap, solutionTopLevel: updatedTopLevel };
+  return updatedTopLevel.toSpliced(overSortIndex + offset, 0, id);
 }

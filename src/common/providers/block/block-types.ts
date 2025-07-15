@@ -1,5 +1,5 @@
 export interface Slot {
-  id: string;
+  id: string | null;
   locked: boolean;
 }
 
@@ -17,7 +17,7 @@ interface ConstantBlock extends BaseBlock {
 
 interface BlockWithChildren extends BaseBlock {
   type: "BlockWithChildren";
-  children: (Slot | null)[];
+  children: Slot[];
   expandable?: boolean;
 }
 

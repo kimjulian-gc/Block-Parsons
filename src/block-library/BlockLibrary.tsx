@@ -6,30 +6,9 @@ import { SectionTitles } from "../common/utils.ts";
 
 export function BlockLibrary() {
   const { blocks } = useBlockContext();
-  const libraryBlocks = blocks.filter(
-    (block) => block.parentId === SectionTitles.BlockLibrary,
-  );
-
-  // TODO: add back later
-  // const [timeTaken, setTimeTaken] = useState(0);
-  // const [count, setCount] = useState(0);
-  // const [, setStartTime] = useState<number | null>(null);
-  //
-  // useEffect(() => {
-  //   const start = Date.now();
-  //   setStartTime(start);
-  //   const interval = setInterval(() => {
-  //     setTimeTaken(Date.now() - start);
-  //   }, 1000);
-  //
-  //   return () => {
-  //     clearInterval(interval);
-  //   };
-  // }, []);
-  //
-  // const checkPressed = () => {
-  //   setCount(count + 1);
-  // };
+  const libraryBlocks = [...blocks.entries()]
+    .filter(([, data]) => data.parentId === SectionTitles.BlockLibrary)
+    .map(([id]) => id);
 
   return (
     <Stack>
@@ -45,7 +24,7 @@ export function BlockLibrary() {
         spacing={1}
         justifyContent={"space-evenly"}
       >
-        {libraryBlocks.keySeq().map((id) => (
+        {libraryBlocks.map((id) => (
           <Draggable key={id} id={id}>
             <Block id={id} presentational={true} />
           </Draggable>

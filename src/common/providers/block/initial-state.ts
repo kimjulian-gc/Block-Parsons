@@ -1,5 +1,5 @@
 import { List, Map } from "immutable";
-import type { BlockData } from "./BlockTypes";
+import type { BlockData } from "./block-types.ts";
 // import { newUUID, SectionTitles } from "../../utils.ts";
 // import { generateFromScamper } from "../../../problem-gen/gen-utils.ts";
 

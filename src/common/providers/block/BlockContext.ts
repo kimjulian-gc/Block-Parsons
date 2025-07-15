@@ -1,6 +1,6 @@
 import { createContext, useContext } from "react";
 import { List, Map } from "immutable";
-import type { BlockData } from "./BlockTypes.ts";
+import type { BlockData } from "./block-types.ts";
 
 export interface ArgumentOptions {
   minAmount: number;

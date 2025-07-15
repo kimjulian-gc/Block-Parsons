@@ -4,6 +4,7 @@ import { throwNull } from "../common/utils.ts";
 import { PresentationalArgumentSlot } from "./PresentationalArgumentSlot.tsx";
 import { useDndContext } from "@dnd-kit/core";
 import { useBlockContext } from "../common/providers/block/BlockContext.ts";
+import { isConstantBlock } from "../common/providers/block/block-types.ts";
 
 export interface BlockProps {
   id: string;
@@ -18,7 +19,7 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
   const { active } = useDndContext();
   const presentational = presentationalProp || active?.id === id;
 
-  if (block.type === "constant") {
+  if (isConstantBlock(block)) {
     return (
       <Box
         bgcolor={"lightgreen"}

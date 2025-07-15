@@ -3,15 +3,32 @@ export interface Slot {
   locked: boolean;
 }
 
-export type ConstantBlock = {
-  type: "constant";
-  value: string;
-};
+type BlockType = "ConstantBlock" | "BlockWithChildren";
 
-export type BlockWithChildren = {
-  type: "containsEntries";
+interface BaseBlock {
+  type: BlockType;
+  parentId: string;
+}
+
+interface ConstantBlock extends BaseBlock {
+  type: "ConstantBlock";
+  value: string;
+}
+
+interface BlockWithChildren extends BaseBlock {
+  type: "BlockWithChildren";
   children: (Slot | null)[];
   expandable?: boolean;
-};
+}
 
 export type BlockData = ConstantBlock | BlockWithChildren;
+
+export function isConstantBlock(block: BlockData): block is ConstantBlock {
+  return block.type === "ConstantBlock";
+}
+
+export function isBlockWithChildren(
+  block: BlockData,
+): block is BlockWithChildren {
+  return block.type === "BlockWithChildren";
+}

@@ -32,8 +32,8 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
     );
   }
 
-  // isBlockWithChildren
   const args = block.children;
+
   return (
     <Stack
       width={"fit-content"}
@@ -47,6 +47,20 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
       {"("}
       {args.map((slot, index) => {
         const idSuffix = `:${id}:${index.toString()}`;
+        const slotId = slot.id || null;
+        if (slot.locked) {
+          const childBlock = slotId ? blocks.get(slotId) : null;
+          const label = childBlock
+            ? isConstantBlock(childBlock)
+              ? childBlock.value
+              : "(...)"
+            : " ";
+          return (
+            <Box key={index} padding={"0.25em"} color={"black"}>
+              {label}
+            </Box>
+          );
+        }
         const propsToPass = {
           idSuffix,
           blockId: slot.id ?? null,

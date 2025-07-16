@@ -28,7 +28,7 @@ const blocks = new Map<string, BlockData>([
     {
       type: "BlockWithChildren",
       children: [
-        { id: plusId, locked: true },
+        { id: plusId, locked: false },
         { id: oneId, locked: false },
         { id: null, locked: false },
       ],

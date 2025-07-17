@@ -6,6 +6,7 @@ import { SectionTitles } from "../../utils.ts";
 const defineId = "define-id";
 const smallGreyId = "smallgrey-id";
 const solidCircleId = "solidcircle-id";
+const testId = "test-id";
 const twentyId = "twenty-id";
 const redId = "red-id";
 const squareId = "square-id";
@@ -32,8 +33,17 @@ export const startingBlockMap = Map<string, BlockData>([
     {
       name: "solid-circle",
       argumentOptions: { minAmount: 2 },
-      childBlocks: [twentyId, redId],
+      childBlocks: [testId, redId],
       parentId: defineId,
+    },
+  ],
+  [
+    testId,
+    {
+      name: "solid-circle",
+      argumentOptions: { minAmount: 2 },
+      childBlocks: [redId, twentyId],
+      parentId: solidCircleId,
     },
   ],
   [twentyId, { name: "20", parentId: solidCircleId }],

@@ -52,8 +52,9 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
     spacing={2}
     useFlexGap
   >
-    <Stack
+  <Stack
   direction="row"
+  // if the current block has childblocks, align baseline, else align flex-start
   alignItems={
     args.some((arg) => arg !== null) ? "baseline" : "flex-start"
   }
@@ -79,8 +80,9 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
         ) : (
           <ArgumentSlot {...propsToPass} key={realIndex} />
         );
+        
       })}
-      {!isConstant && <Box>)</Box>}
+      {!isConstant && ")"}
     </Stack>
   )}
 </Stack>

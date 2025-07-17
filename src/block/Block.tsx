@@ -42,8 +42,6 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
   // console.log(args);
   // console.log(name, argumentOptions,args)
 
-  let pad = 0;
-
   return (
   <Stack
     width={"fit-content"}
@@ -54,34 +52,38 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
     spacing={2}
     useFlexGap
   >
-    <Stack direction="row" alignItems="flex-start" spacing={2} pt = "2.0em">
-      {isConstant ? null : "("}
-      {name}
+    <Stack
+  direction="row"
+  alignItems={
+    args.some((arg) => arg !== null) ? "baseline" : "flex-start"
+  }
+  spacing={2}
+>
+  {isConstant ? null : "("}
+  {name}
 
-      {args.length > 0 && (
-        <Stack spacing={2}>
-          {presentational ? (
-            <PresentationalArgumentSlot idSuffix={`${name}:${id}:0`} blockId={args[0]}
-            />
-          ) : (
-            <ArgumentSlot idSuffix={`${name}:${id}:0`} blockId={args[0]}
-            />
-          )}
-          {args.slice(1).map((blockId, index) => {
-            const realIndex = index + 1;
-            const idSuffix = `${name}:${id}:${realIndex}`;
-            const propsToPass = { idSuffix, blockId };
-          
-            return presentational ? (
-              <PresentationalArgumentSlot {...propsToPass} key={realIndex} />
-            ) : (
-              <ArgumentSlot {...propsToPass} key={realIndex} />
-            );
-          })}
-          {!isConstant && <Box>)</Box>}
-        </Stack>
+  {args.length > 0 && (
+    <Stack spacing={2}>
+      {presentational ? (
+        <PresentationalArgumentSlot idSuffix={`${name}:${id}:0`} blockId={args[0]} />
+      ) : (
+        <ArgumentSlot idSuffix={`${name}:${id}:0`} blockId={args[0]} />
       )}
+      {args.slice(1).map((blockId, index) => {
+        const realIndex = index + 1;
+        const idSuffix = `${name}:${id}:${realIndex}`;
+        const propsToPass = { idSuffix, blockId };
+
+        return presentational ? (
+          <PresentationalArgumentSlot {...propsToPass} key={realIndex} />
+        ) : (
+          <ArgumentSlot {...propsToPass} key={realIndex} />
+        );
+      })}
+      {!isConstant && <Box>)</Box>}
     </Stack>
+  )}
+</Stack>
   </Stack>
 );
 }

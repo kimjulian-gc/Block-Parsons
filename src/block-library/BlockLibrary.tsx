@@ -28,6 +28,7 @@ export function BlockLibrary() {
           </Draggable>
         ))}
       </Stack>
+      <Stack direction="row" spacing={1}></Stack>
     </Stack>
   );
 }

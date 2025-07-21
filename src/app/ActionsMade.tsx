@@ -1,5 +1,6 @@
 import { Stack, Button, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { useBlockDispatchContext } from "../common/providers/block/BlockDispatchContext.ts";
 
 function formatTime(ms: number) {
   const hours = Math.floor(ms / (3600 * 1000));
@@ -13,6 +14,8 @@ export function ActionsMade() {
   const [count, setCount] = useState(0);
   const [timeTaken, setTimeTaken] = useState(0);
   const [startTime, setStartTime] = useState<number | null>(null);
+
+  const dispatch = useBlockDispatchContext();
 
   useEffect(() => {
     const start = Date.now();
@@ -31,13 +34,15 @@ export function ActionsMade() {
   };
 
   const handleReset = () => {
-    //todo
+    dispatch({ type: "RESET" });
   };
 
   return (
     <Stack spacing={2} alignItems="center" justifyContent="center">
       <Stack direction="row" spacing={2} justifyContent="center">
-        <Button onClick={handleCheck} color="secondary">Check</Button>
+        <Button onClick={handleCheck} color="secondary">
+          Check
+        </Button>
         <Button onClick={handleReset}>Reset</Button>
       </Stack>
       <Typography>Attempts: {count}</Typography>

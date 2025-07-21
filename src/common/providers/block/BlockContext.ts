@@ -11,7 +11,7 @@ export interface BlockData {
   argumentOptions?: ArgumentOptions;
   childBlocks?: (string | null)[];
   parentId: string;
-  firstDepth : number;
+  firstDepth: number;
 }
 
 export interface BlockContextType {

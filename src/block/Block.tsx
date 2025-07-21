@@ -18,7 +18,6 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
 
   const { active } = useDndContext();
   const presentational = presentationalProp || active?.id === id.toString();
-  
 
   // minBase is min number of arguments
   const minBase = argumentOptions?.minAmount ?? 0;
@@ -43,49 +42,58 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
   // console.log(name, argumentOptions,args)
 
   return (
-  <Stack
-    width={"fit-content"}
-    bgcolor={isConstant ? "lightgreen" : "lightgray"}
-    padding={".5em"}
-    borderRadius={".5em"}
-    fontFamily={"monospace"}
-    spacing={2}
-    useFlexGap
-  >
-  <Stack
-  direction="row"
-  // if the current block has childblocks, align baseline, else align flex-start
-  alignItems={
-    args.some((arg) => arg !== null) ? "baseline" : "flex-start"
-  }
-  spacing={2}
->
-  {isConstant ? null : "("}
-  {name}
+    <Stack
+      width={"fit-content"}
+      bgcolor={isConstant ? "lightgreen" : "lightgray"}
+      padding={".5em"}
+      borderRadius={".5em"}
+      fontFamily={"monospace"}
+      spacing={2}
+      useFlexGap
+    >
+      <Stack
+        direction="row"
+        // if the current block has childblocks, align baseline, else align flex-start
+        alignItems={
+          args.some((arg) => arg !== null) ? "baseline" : "flex-start"
+        }
+        spacing={2}
+      >
+        {isConstant ? null : "("}
+        {name}
 
-  {args.length > 0 && (
-    <Stack spacing={2}>
-      {presentational ? (
-        <PresentationalArgumentSlot idSuffix={`${name}:${id}:0`} blockId={args[0]} />
-      ) : (
-        <ArgumentSlot idSuffix={`${name}:${id}:0`} blockId={args[0]} />
-      )}
-      {args.slice(1).map((blockId, index) => {
-        const realIndex = index + 1;
-        const idSuffix = `${name}:${id}:${realIndex}`;
-        const propsToPass = { idSuffix, blockId };
+        {args.length > 0 && (
+          <Stack spacing={2}>
+            {args.slice(0, -1).map((blockId, index) => {
+              const idSuffix = `${name}:${id}:${index}`;
+              const propsToPass = { idSuffix, blockId };
 
-        return presentational ? (
-          <PresentationalArgumentSlot {...propsToPass} key={realIndex} />
-        ) : (
-          <ArgumentSlot {...propsToPass} key={realIndex} />
-        );
-        
-      })}
-      {!isConstant && ")"}
+              return presentational ? (
+                <PresentationalArgumentSlot {...propsToPass} key={index} />
+              ) : (
+                <ArgumentSlot {...propsToPass} key={index} />
+              );
+            })}
+
+            {args.length > 0 && (
+              <Stack direction="row" spacing={1} alignItems={"flex-end"}>
+                {presentational ? (
+                  <PresentationalArgumentSlot
+                    idSuffix={`${name}:${id}:${args.length - 1}`}
+                    blockId={args[args.length - 1]}
+                  />
+                ) : (
+                  <ArgumentSlot
+                    idSuffix={`${name}:${id}:${args.length - 1}`}
+                    blockId={args[args.length - 1]}
+                  />
+                )}
+                {!isConstant && <Box paddingBottom={"1em"}>)</Box>}
+              </Stack>
+            )}
+          </Stack>
+        )}
+      </Stack>
     </Stack>
-  )}
-</Stack>
-  </Stack>
-);
+  );
 }

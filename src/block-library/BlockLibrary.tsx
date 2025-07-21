@@ -1,4 +1,4 @@
-import { Button, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 import { Block } from "../block/Block.tsx";
 import { Draggable } from "../common/dnd-wrappers/Draggable.tsx";
 import { useBlockContext } from "../common/providers/block/BlockContext.ts";
@@ -13,8 +13,6 @@ export function BlockLibrary() {
   return (
     <Stack>
       <Stack
-        border={"2px solid black"}
-        borderRadius={"0.5em"}
         padding={"0.5em"}
         boxSizing={"border-box"}
         width={"fit-content"}
@@ -30,14 +28,6 @@ export function BlockLibrary() {
           </Draggable>
         ))}
       </Stack>
-      <Stack direction="row" spacing={1}>
-        {/*<Button onClick={checkPressed} color={"secondary"}>*/}
-        {/*  Check*/}
-        {/*</Button>*/}
-        <Button> Reset </Button>
-      </Stack>
-      {/*<Typography> Number of attempts: {count} </Typography>*/}
-      {/*<Typography> Timer: {Math.floor(timeTaken / 1000)} </Typography>*/}
     </Stack>
   );
 }

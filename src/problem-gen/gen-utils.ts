@@ -96,7 +96,7 @@ function turnIntoBlock(
     children: blockChildren,
   });
 
-  return { id: blockId, locked: caretInversion };
+  return { id: blockId, locked: !caretInversion };
 }
 
 const BacktickHandler: TokenHandler = {

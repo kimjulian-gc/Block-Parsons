@@ -5,7 +5,7 @@ import {
 } from "scamper/src/parser/parser.ts";
 import { AST, SyntaxNode } from "scamper/src/ast.ts";
 import { newUUID, SectionTitles, throwNull } from "../common/utils.ts";
-import type { BlockData } from "../common/providers/block/block-types.ts";
+import type { BlockData, Slot } from "../common/providers/block/block-types.ts";
 import type { TokenHandler } from "scamper/src/parser/tokenhandler.ts";
 import { DefaultTokenHandlingSettings } from "scamper/src/parser/tokenhandler.ts";
 import {
@@ -14,11 +14,14 @@ import {
 } from "scamper/src/parser/parsehandler.ts";
 import { Value } from "scamper/src/lang";
 
+const BacktickTag = "extract-block";
+const CaretTag = "invert-conversion";
+
 function turnIntoBlock(
   node: SyntaxNode,
   blockMap: Map<string, BlockData>,
-  // caretInversion: boolean = false,
-): string {
+  caretInversion: boolean = false,
+): Slot {
   const blockId = newUUID();
   // console.log(node);
   if (node.simplename.toLowerCase() !== "s-expression") {
@@ -27,7 +30,7 @@ function turnIntoBlock(
       value: node.simplename,
       parentId: SectionTitles.BlockLibrary,
     });
-    return blockId;
+    return { id: blockId, locked: caretInversion };
   }
 
   // otherwise it is an s-expression with optional children
@@ -38,13 +41,27 @@ function turnIntoBlock(
     );
   }
 
+  // console.log(
+  //   "simplename:",
+  //   firstNode.simplename,
+  //   firstNode.simplename === `"${CaretTag}"`,
+  //   firstNode.simplename === BacktickTag,
+  // );
+  // if first node is a caret, it should be inverted
+  if (firstNode.simplename === `"${CaretTag}"`) {
+    console.log("! caret", firstNode, node.children);
+    return turnIntoBlock(node.children[0], blockMap, true);
+  }
   // if it includes a backtick, it should be popped out
-  // if it doesn't, it should
-  if (firstNode.simplename.includes("backtick")) {
+  if (firstNode.simplename === `"${BacktickTag}"`) {
     console.log("! backtick", firstNode, node.children);
+    return turnIntoBlock(node.children[0], blockMap, caretInversion);
   }
 
-  function updateParentOfChild(childId: string) {
+  function updateParentOfChild(childId: Slot["id"]) {
+    if (!childId) {
+      throw new Error("can't update parent of null childId");
+    }
     const blockData =
       blockMap.get(childId) ?? throwNull("somehow block data doesn't exist?");
     blockMap.set(childId, {
@@ -55,17 +72,17 @@ function turnIntoBlock(
 
   // turnIntoBlock(firstNode, blockMap);
   // TODO: support special syntax
-  const firstBlockId = turnIntoBlock(firstNode, blockMap);
-  updateParentOfChild(firstBlockId);
+  const firstBlockSlot = turnIntoBlock(firstNode, blockMap, caretInversion);
+  updateParentOfChild(firstBlockSlot.id);
 
   // const blockChildren = [{ id: null, locked: false }];
-  const blockChildren = [{ id: firstBlockId, locked: false }];
+  const blockChildren = [firstBlockSlot];
   for (const child of node.children) {
     // turnIntoBlock(child, blockMap);
     // blockChildren.push({ id: null, locked: false });
-    const childId = turnIntoBlock(child, blockMap);
-    updateParentOfChild(childId);
-    blockChildren.push({ id: childId, locked: false });
+    const childSlot = turnIntoBlock(child, blockMap, caretInversion);
+    updateParentOfChild(childSlot.id);
+    blockChildren.push(childSlot);
   }
 
   blockMap.set(blockId, {
@@ -74,7 +91,7 @@ function turnIntoBlock(
     children: blockChildren,
   });
 
-  return blockId;
+  return { id: blockId, locked: caretInversion };
 }
 
 const BacktickHandler: TokenHandler = {
@@ -93,7 +110,7 @@ const BacktickParseHandler: ParseHandler = {
     return Value.mkSyntax(
       beg.range,
       Value.mkList(
-        Value.mkSym("extract-block"),
+        Value.mkSym(BacktickTag),
         parseValue(tokens, handlingSettings),
       ),
     );
@@ -115,10 +132,7 @@ const CaretParseHandler: ParseHandler = {
     console.log("! encountered caret during parsing");
     return Value.mkSyntax(
       beg.range,
-      Value.mkList(
-        Value.mkSym("invert-conversion"),
-        parseValue(tokens, handlingSettings),
-      ),
+      Value.mkList(Value.mkSym(CaretTag), parseValue(tokens, handlingSettings)),
     );
   },
 };

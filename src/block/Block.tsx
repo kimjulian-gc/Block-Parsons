@@ -56,19 +56,25 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
         <Stack spacing={1}>
           {args.map((slot, index) => {
             const idSuffix = `:${id}:${index.toString()}`;
-            const slotId = slot.id ?? null;
+            const slotId = slot.id;
             if (slot.locked) {
-              const childBlock = slotId ? blocks.get(slotId) : null;
-              const label = childBlock
-                ? isConstantBlock(childBlock)
-                  ? childBlock.value
-                  : "(...)"
-                : " ";
-              return (
-                <Box key={index} padding={"0.25em"} color={"black"}>
-                  {label}
-                </Box>
-              );
+              if (!slotId) {
+                return (
+                  <Box key={index} padding={"0.25em"} color={"black"}></Box>
+                );
+              }
+
+              const childBlock =
+                blocks.get(slotId) ??
+                throwNull(`should have found block with id ${slotId}`);
+              if (isConstantBlock(childBlock)) {
+                return (
+                  <Box key={index} padding={"0.25em"} color={"black"}>
+                    {childBlock.value}
+                  </Box>
+                );
+              }
+              return <Block key={index} id={slotId} presentational />;
             }
             const propsToPass = { idSuffix, blockId: slotId };
             const ChildBlock = presentational ? (

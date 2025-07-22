@@ -35,7 +35,7 @@ import { generateFromScamper } from "../../../problem-gen/gen-utils.ts";
 //     },
 //   ],
 // ]);
-const blocks = generateFromScamper("(+ 1 (+ 2 3))(- 1 2)");
+const blocks = generateFromScamper("^(+ `1 (+ 2 3))(- 1 2)");
 
 const solutionTopLevel = [...blocks.keys()].filter(
   (key) => blocks.get(key)?.parentId === SectionTitles.SolutionBox,

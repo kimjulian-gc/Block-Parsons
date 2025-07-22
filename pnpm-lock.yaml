@@ -43,7 +43,7 @@ importers:
         version: 19.1.0(react@19.1.0)
       scamper:
         specifier: github:eoyoa/scamper#custom-tokenizer
-        version: https://codeload.github.com/eoyoa/scamper/tar.gz/3fd8b693b2967d23ee38ee513b11a7bfa23537ac(typescript@5.8.3)
+        version: https://codeload.github.com/eoyoa/scamper/tar.gz/0f6bb6b3a0466e0586c4e564aa4a2963b921d7c5(typescript@5.8.3)
       use-immer:
         specifier: ^0.11.0
         version: 0.11.0(immer@10.1.1)(react@19.1.0)
@@ -2091,8 +2091,8 @@ packages:
     resolution: {integrity: sha512-xAg7SOnEhrm5zI3puOOKyy1OMcMlIJZYNJY7xLBwSze0UjhPLnWfj2GF2EpT0jmzaJKIWKHLsaSSajf35bcYnA==}
     engines: {node: '>=v12.22.7'}
 
-  scamper@https://codeload.github.com/eoyoa/scamper/tar.gz/3fd8b693b2967d23ee38ee513b11a7bfa23537ac:
-    resolution: {tarball: https://codeload.github.com/eoyoa/scamper/tar.gz/3fd8b693b2967d23ee38ee513b11a7bfa23537ac}
+  scamper@https://codeload.github.com/eoyoa/scamper/tar.gz/0f6bb6b3a0466e0586c4e564aa4a2963b921d7c5:
+    resolution: {tarball: https://codeload.github.com/eoyoa/scamper/tar.gz/0f6bb6b3a0466e0586c4e564aa4a2963b921d7c5}
     version: 2.8.7
 
   scheduler@0.26.0:
@@ -4545,7 +4545,7 @@ snapshots:
     dependencies:
       xmlchars: 2.2.0
 
-  scamper@https://codeload.github.com/eoyoa/scamper/tar.gz/3fd8b693b2967d23ee38ee513b11a7bfa23537ac(typescript@5.8.3):
+  scamper@https://codeload.github.com/eoyoa/scamper/tar.gz/0f6bb6b3a0466e0586c4e564aa4a2963b921d7c5(typescript@5.8.3):
     dependencies:
       '@codemirror/language': 6.11.2
       '@jest/globals': 30.0.5

@@ -31,8 +31,7 @@ export function generateInitialStateFromSolution(
   for (const [, block] of blockMap) {
     if (block.type !== "BlockWithChildren") continue;
     for (const childSlot of block.children) {
-      if (childSlot.locked) continue;
-      if (!childSlot.id) continue;
+      if (childSlot.locked || !childSlot.id) continue;
       const childData =
         blockMap.get(childSlot.id) ??
         throwNull("non-null slot id somehow points to non-existent block");

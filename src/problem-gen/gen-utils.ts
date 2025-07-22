@@ -17,7 +17,7 @@ import { Value } from "scamper/src/lang";
 const BacktickTag = "invert-generation";
 const CaretTag = "convert-function-style";
 
-function turnIntoBlock(
+export function turnIntoBlock(
   node: SyntaxNode,
   blockMap: Map<string, BlockData>,
   caretOperator: boolean = false,
@@ -130,7 +130,7 @@ const CaretParseHandler: ParseHandler = {
   },
 };
 
-function parseTemplateSolution(src: string) {
+export function parseTemplateSolution(src: string) {
   const tokenizer = new Tokenizer(src, {
     customHandlers: [
       ...DefaultTokenHandlingSettings.customHandlers,
@@ -157,17 +157,4 @@ function parseTemplateSolution(src: string) {
   }
 
   return new AST(values);
-}
-
-export function generateSolutionFromScamper(src: string) {
-  const { nodes: queue } = parseTemplateSolution(src);
-
-  // console.log(queue);
-  const blockMap = new Map<string, BlockData>();
-
-  for (const node of queue) {
-    turnIntoBlock(node, blockMap);
-  }
-
-  return blockMap;
 }

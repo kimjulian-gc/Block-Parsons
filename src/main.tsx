@@ -2,7 +2,8 @@ import { createRoot } from "react-dom/client";
 import { throwNull } from "./common/utils.ts";
 import { App } from "./app/App.tsx";
 import { enableMapSet } from "immer";
-import { generateSolutionFromScamper } from "./problem-gen/gen-utils.ts";
+
+import { generateSolutionFromScamper } from "./problem-gen/state-generators.ts";
 
 enableMapSet();
 

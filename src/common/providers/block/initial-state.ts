@@ -1,5 +1,6 @@
 import { SectionTitles } from "../../utils.ts";
-import { generateSolutionFromScamper } from "../../../problem-gen/gen-utils.ts";
+
+import { generateSolutionFromScamper } from "../../../problem-gen/state-generators.ts";
 
 // const plusId = "plus";
 // const oneId = "1";

@@ -1,6 +1,9 @@
 import { SectionTitles } from "../../utils.ts";
 
-import { generateSolutionFromScamper } from "../../../problem-gen/state-generators.ts";
+import {
+  generateInitialStateFromSolution,
+  generateSolutionFromScamper,
+} from "../../../problem-gen/state-generators.ts";
 
 // const plusId = "plus";
 // const oneId = "1";
@@ -36,9 +39,10 @@ import { generateSolutionFromScamper } from "../../../problem-gen/state-generato
 //     },
 //   ],
 // ]);
-const blocks = generateSolutionFromScamper(
+const solution = generateSolutionFromScamper(
   "(`+ 1)^(`- 2 (reduce + `(list 4 5)))(list 6 7 8 9)",
 );
+const blocks = generateInitialStateFromSolution(solution);
 
 const solutionTopLevel = [...blocks.keys()].filter(
   (key) => blocks.get(key)?.parentId === SectionTitles.SolutionBox,

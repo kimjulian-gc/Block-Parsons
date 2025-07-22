@@ -76,7 +76,9 @@ function turnIntoBlock(
   updateParentOfChild(firstBlockSlot.id);
 
   // const blockChildren = [{ id: null, locked: false }];
-  const blockChildren: Slot[] = [{ id: firstBlockSlot.id, locked: true }];
+  const blockChildren: Slot[] = [
+    { id: firstBlockSlot.id, locked: caretInversion },
+  ];
   for (const child of node.children) {
     // turnIntoBlock(child, blockMap);
     // blockChildren.push({ id: null, locked: false });

@@ -20,17 +20,17 @@ const CaretTag = "invert-conversion";
 function turnIntoBlock(
   node: SyntaxNode,
   blockMap: Map<string, BlockData>,
-  caretInversion: boolean = false,
+  caretOperator: boolean = false,
 ): Slot {
   const blockId = newUUID();
-  // console.log(node);
+  // console.log(node.simplename, caretOperator);
   if (node.simplename.toLowerCase() !== "s-expression") {
     blockMap.set(blockId, {
       type: "ConstantBlock",
       value: node.simplename,
       parentId: SectionTitles.SolutionBox,
     });
-    return { id: blockId, locked: !caretInversion };
+    return { id: blockId, locked: !caretOperator };
   }
 
   // otherwise it is an s-expression with optional children
@@ -49,13 +49,13 @@ function turnIntoBlock(
   // );
   // if first node is a caret, it should be inverted
   if (firstNode.simplename === `"${CaretTag}"`) {
-    console.log("! caret", firstNode, node.children);
+    // console.log("! caret", firstNode, node.children);
     return turnIntoBlock(node.children[0], blockMap, true);
   }
   // if it includes a backtick, it should be popped out
   if (firstNode.simplename === `"${BacktickTag}"`) {
-    console.log("! backtick", firstNode, node.children);
-    return turnIntoBlock(node.children[0], blockMap, !caretInversion);
+    // console.log("! backtick", firstNode, node.children);
+    return turnIntoBlock(node.children[0], blockMap, !caretOperator);
   }
 
   function updateParentOfChild(childId: Slot["id"]) {
@@ -70,19 +70,17 @@ function turnIntoBlock(
     });
   }
 
-  // turnIntoBlock(firstNode, blockMap);
-  // TODO: support special syntax
-  const firstBlockSlot = turnIntoBlock(firstNode, blockMap, caretInversion);
+  const firstBlockSlot = turnIntoBlock(firstNode, blockMap, caretOperator);
   updateParentOfChild(firstBlockSlot.id);
 
-  // const blockChildren = [{ id: null, locked: false }];
   const blockChildren: Slot[] = [
-    { id: firstBlockSlot.id, locked: caretInversion },
+    {
+      id: firstBlockSlot.id,
+      locked: caretOperator ? true : firstBlockSlot.locked,
+    },
   ];
   for (const child of node.children) {
-    // turnIntoBlock(child, blockMap);
-    // blockChildren.push({ id: null, locked: false });
-    const childSlot = turnIntoBlock(child, blockMap, caretInversion);
+    const childSlot = turnIntoBlock(child, blockMap, caretOperator);
     updateParentOfChild(childSlot.id);
     blockChildren.push(childSlot);
     // c  L out
@@ -98,7 +96,7 @@ function turnIntoBlock(
     children: blockChildren,
   });
 
-  return { id: blockId, locked: !caretInversion };
+  return { id: blockId, locked: !caretOperator };
 }
 
 const BacktickHandler: TokenHandler = {
@@ -113,7 +111,7 @@ const BacktickHandler: TokenHandler = {
 const BacktickParseHandler: ParseHandler = {
   shouldHandle: (beg) => beg.text === "`",
   handle: (beg, tokens, handlingSettings) => {
-    console.log("! encountered backtick during parsing");
+    // console.log("! encountered backtick during parsing");
     return Value.mkSyntax(
       beg.range,
       Value.mkList(
@@ -136,7 +134,7 @@ const CaretHandler: TokenHandler = {
 const CaretParseHandler: ParseHandler = {
   shouldHandle: (beg) => beg.text === "^",
   handle: (beg, tokens, handlingSettings) => {
-    console.log("! encountered caret during parsing");
+    // console.log("! encountered caret during parsing");
     return Value.mkSyntax(
       beg.range,
       Value.mkList(Value.mkSym(CaretTag), parseValue(tokens, handlingSettings)),

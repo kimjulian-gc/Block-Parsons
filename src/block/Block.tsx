@@ -1,4 +1,4 @@
-import { Box, Stack} from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
 import { throwNull } from "../common/utils.ts";
 import { PresentationalArgumentSlot } from "./PresentationalArgumentSlot.tsx";
@@ -18,7 +18,6 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
 
   const { active } = useDndContext();
   const presentational = presentationalProp || active?.id === id;
-
 
   if (isConstantBlock(block)) {
     return (
@@ -49,52 +48,55 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
         direction="row"
         // if the current block has childblocks, align baseline, else align flex-start
         alignItems={
-          args.some((arg) => arg !== null) ? "baseline" : "flex-start"
+          args.some((arg) => arg.id !== null) ? "baseline" : "flex-start"
         }
         spacing={2}
       >
-  <Box>(</Box>
-<Stack spacing={1}>
-        {args.map((slot, index) => {
-          const idSuffix = `:${id}:${index.toString()}`;
-          const slotId = slot.id ?? null;
-          if (slot.locked) {
-            const childBlock = slotId ? blocks.get(slotId) : null;
-            const label = childBlock
-              ? isConstantBlock(childBlock)
-                ? childBlock.value
-                : "(...)"
-              : " ";
-            return (
-              <Box key={index} padding={"0.25em"} color={"black"}>
-                {label}
-              </Box>
-            );
-          }
-        const propsToPass = { idSuffix, blockId: slotId };
-          const ChildBlock = presentational ? (
-            <PresentationalArgumentSlot {...propsToPass} />
-          ) : (
-            <ArgumentSlot {...propsToPass} />
-          );
-
-          const isLast = index === args.length - 1;
-
-          return (
-            <Stack direction="row" alignItems="flex-end" key={index}>
-              {ChildBlock}
-              {isLast && (
-                <Box
-                  marginLeft="0.25em"
-                  {...(slotId && blocks.has(slotId) ? { marginBottom: "1em" } : {})}
-                >
-                  )
+        <Box>(</Box>
+        <Stack spacing={1}>
+          {args.map((slot, index) => {
+            const idSuffix = `:${id}:${index.toString()}`;
+            const slotId = slot.id ?? null;
+            if (slot.locked) {
+              const childBlock = slotId ? blocks.get(slotId) : null;
+              const label = childBlock
+                ? isConstantBlock(childBlock)
+                  ? childBlock.value
+                  : "(...)"
+                : " ";
+              return (
+                <Box key={index} padding={"0.25em"} color={"black"}>
+                  {label}
                 </Box>
-              )}
-            </Stack>
-          );
-        })}
-</Stack>
+              );
+            }
+            const propsToPass = { idSuffix, blockId: slotId };
+            const ChildBlock = presentational ? (
+              <PresentationalArgumentSlot {...propsToPass} />
+            ) : (
+              <ArgumentSlot {...propsToPass} />
+            );
+
+            const isLast = index === args.length - 1;
+
+            return (
+              <Stack direction="row" alignItems="flex-end" key={index}>
+                {ChildBlock}
+                {isLast && (
+                  <Box
+                    marginLeft="0.25em"
+                    {...(slotId && blocks.has(slotId)
+                      ? { marginBottom: "1em" }
+                      : {})}
+                  >
+                    )
+                  </Box>
+                )}
+              </Stack>
+            );
+          })}
+        </Stack>
       </Stack>
     </Stack>
-  );}
+  );
+}

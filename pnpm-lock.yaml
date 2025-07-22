@@ -32,9 +32,9 @@ importers:
       '@types/uuid':
         specifier: ^10.0.0
         version: 10.0.0
-      immutable:
-        specifier: ^5.1.3
-        version: 5.1.3
+      immer:
+        specifier: ^10.1.1
+        version: 10.1.1
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -44,6 +44,9 @@ importers:
       scamper:
         specifier: github:slag-plt/scamper
         version: https://codeload.github.com/slag-plt/scamper/tar.gz/d113b5646265c843dba42e87e9e99088cbebd364(typescript@5.8.3)
+      use-immer:
+        specifier: ^0.11.0
+        version: 0.11.0(immer@10.1.1)(react@19.1.0)
       uuid:
         specifier: ^11.1.0
         version: 11.1.0
@@ -1342,8 +1345,8 @@ packages:
     resolution: {integrity: sha512-Hs59xBNfUIunMFgWAbGX5cq6893IbWg4KnrjbYwX3tx0ztorVgTDA6B2sxf8ejHJ4wz8BqGUMYlnzNBer5NvGg==}
     engines: {node: '>= 4'}
 
-  immutable@5.1.3:
-    resolution: {integrity: sha512-+chQdDfvscSF1SJqv2gn4SRO2ZyS3xL3r7IW/wWEEzrzLisnOlKiQu5ytC/BVNcS15C39WT2Hg/bjKjDMcu+zg==}
+  immer@10.1.1:
+    resolution: {integrity: sha512-s2MPrmjovJcoMaHtx6K11Ra7oD05NT97w1IC5zpMkT6Atjr7H8LjaDd81iIxUYpMKSRRNMJE703M1Fhr/TctHw==}
 
   import-fresh@3.3.1:
     resolution: {integrity: sha512-TR3KfrTZTYLPB6jUjfx6MF9WcWrHL9su5TObK4ZkYgBdWKPOFoSoQIdEuTuR82pmtxH2spWG9h6etwfr1pLBqQ==}
@@ -1812,6 +1815,12 @@ packages:
 
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
+
+  use-immer@0.11.0:
+    resolution: {integrity: sha512-RNAqi3GqsWJ4bcCd4LMBgdzvPmTABam24DUaFiKfX9s3MSorNRz9RDZYJkllJoMHUxVLMDetwAuCDeyWNrp1yA==}
+    peerDependencies:
+      immer: '>=8.0.0'
+      react: ^16.8.0 || ^17.0.1 || ^18.0.0 || ^19.0.0
 
   uuid@11.1.0:
     resolution: {integrity: sha512-0/A9rDy9P7cJ+8w1c9WD9V//9Wj15Ce2MPz8Ri6032usz+NfePxx5AcN3bN+r6ZL6jEo066/yNYB3tn4pQEx+A==}
@@ -3187,7 +3196,7 @@ snapshots:
 
   ignore@7.0.5: {}
 
-  immutable@5.1.3: {}
+  immer@10.1.1: {}
 
   import-fresh@3.3.1:
     dependencies:
@@ -3631,6 +3640,11 @@ snapshots:
   uri-js@4.4.1:
     dependencies:
       punycode: 2.3.1
+
+  use-immer@0.11.0(immer@10.1.1)(react@19.1.0):
+    dependencies:
+      immer: 10.1.1
+      react: 19.1.0
 
   uuid@11.1.0: {}
 

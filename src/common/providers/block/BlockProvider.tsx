@@ -1,17 +1,26 @@
-import { type PropsWithChildren, useReducer } from "react";
-import { blockReducer } from "./reducer/block-reducer.ts";
-import { BlockContext } from "./BlockContext.ts";
+import { type PropsWithChildren } from "react";
+import { BlockContext, type BlockContextType } from "./BlockContext.ts";
 import { BlockDispatchContext } from "./BlockDispatchContext.ts";
 import { initialState } from "./initial-state.ts";
+import { useImmerReducer } from "use-immer";
+import {
+  type BlockDispatchType,
+  blockReducer,
+} from "./reducer/block-reducer.ts";
 
 export function BlockProvider({ children }: PropsWithChildren) {
-  const [state, dispatch] = useReducer(blockReducer, initialState);
+  const [state, dispatch] = useImmerReducer<
+    BlockContextType,
+    BlockDispatchType
+  >(blockReducer, initialState);
 
   // console.log(blockMap);
 
   return (
-    <BlockContext value={state}>
-      <BlockDispatchContext value={dispatch}>{children}</BlockDispatchContext>
-    </BlockContext>
+    <BlockContext.Provider value={state}>
+      <BlockDispatchContext.Provider value={dispatch}>
+        {children}
+      </BlockDispatchContext.Provider>
+    </BlockContext.Provider>
   );
 }

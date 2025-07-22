@@ -1,62 +1,52 @@
-import { List, Map } from "immutable";
-import type { BlockData } from "./BlockContext.ts";
-import { newUUID, SectionTitles } from "../../utils.ts";
-import { generateFromScamper } from "../../../problem-gen/gen-utils.ts";
+import type { BlockData } from "./block-types.ts";
+import { SectionTitles } from "../../utils.ts";
+import type { BlockContextType } from "./BlockContext.ts";
 
-// TODO: remove this testing default state
-const defineId = "define-id";
-const smallGreyId = "smallgrey-id";
-const solidCircleId = "solidcircle-id";
-const twentyId = "twenty-id";
-const redId = "red-id";
-const squareId = "square-id";
-const fiveId = "five-id";
-export const startingBlockMap = Map<string, BlockData>([
+const plusId = "plus";
+const oneId = "1";
+const addExprId = "add-expr";
+
+const blocks = new Map<string, BlockData>([
   [
-    defineId,
+    plusId,
     {
-      name: "define",
-      argumentOptions: { minAmount: 2 },
-      childBlocks: [smallGreyId, solidCircleId],
+      type: "ConstantBlock",
+      value: "+",
+      parentId: addExprId,
+    },
+  ],
+  [
+    oneId,
+    {
+      type: "ConstantBlock",
+      value: "1",
+      parentId: addExprId,
+    },
+  ],
+  [
+    addExprId,
+    {
+      type: "BlockWithChildren",
+      children: [
+        { id: plusId, locked: false },
+        { id: oneId, locked: false },
+        { id: null, locked: false },
+      ],
       parentId: SectionTitles.SolutionBox,
     },
   ],
-  [
-    smallGreyId,
-    {
-      name: "small-grey",
-      parentId: defineId,
-    },
-  ],
-  [
-    solidCircleId,
-    {
-      name: "solid-circle",
-      argumentOptions: { minAmount: 2 },
-      childBlocks: [twentyId, redId],
-      parentId: defineId,
-    },
-  ],
-  [twentyId, { name: "20", parentId: solidCircleId }],
-  [redId, { name: '"red"', parentId: solidCircleId }],
-  [squareId, { name: "square", parentId: SectionTitles.BlockLibrary }],
-  [fiveId, { name: "5", parentId: SectionTitles.BlockLibrary }],
-  [
-    newUUID(),
-    {
-      name: "+",
-      parentId: SectionTitles.BlockLibrary,
-      argumentOptions: { minAmount: 2 },
-    },
-  ],
 ]);
-// const initialTopLevel = startingBlockMap
-//   .entrySeq()
-//   .filter(([, data]) => data.parentId === SectionTitles.SolutionBox)
-//   .map(([id]) => id)
-//   .toList();
 
-export const initialState = {
-  blocks: generateFromScamper("(+ 1 (+ 2 3))(- 1 2)"),
-  solutionTopLevel: List<string>(),
+const solutionTopLevel = [...blocks.keys()].filter(
+  (key) => blocks.get(key)?.parentId === SectionTitles.SolutionBox,
+);
+
+export const initialState: BlockContextType = {
+  blocks,
+  solutionTopLevel,
 };
+
+// export const initialState = {
+//   blocks: generateFromScamper("(+ 1 (+ 2 3))(- 1 2)"),
+//   solutionTopLevel: List<string>(),
+// };

@@ -35,7 +35,9 @@ import { generateSolutionFromScamper } from "../../../problem-gen/gen-utils.ts";
 //     },
 //   ],
 // ]);
-const blocks = generateSolutionFromScamper("^(+ 1 `(+ 2 3))(`- `4 5)");
+const blocks = generateSolutionFromScamper(
+  "(`+ 1)^(`- 2 (reduce + `(list 4 5)))(list 6 7 8 9)",
+);
 
 const solutionTopLevel = [...blocks.keys()].filter(
   (key) => blocks.get(key)?.parentId === SectionTitles.SolutionBox,

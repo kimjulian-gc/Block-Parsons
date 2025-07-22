@@ -14,8 +14,8 @@ import {
 } from "scamper/src/parser/parsehandler.ts";
 import { Value } from "scamper/src/lang";
 
-const BacktickTag = "extract-block";
-const CaretTag = "invert-conversion";
+const BacktickTag = "invert-generation";
+const CaretTag = "convert-function-style";
 
 function turnIntoBlock(
   node: SyntaxNode,
@@ -23,7 +23,6 @@ function turnIntoBlock(
   caretOperator: boolean = false,
 ): Slot {
   const blockId = newUUID();
-  // console.log(node.simplename, caretOperator);
   if (node.simplename.toLowerCase() !== "s-expression") {
     blockMap.set(blockId, {
       type: "ConstantBlock",
@@ -34,27 +33,16 @@ function turnIntoBlock(
   }
 
   // otherwise it is an s-expression with optional children
-  const firstNode = node.children.shift();
-  if (!firstNode) {
-    throw new Error(
-      "Scamper is broken: first node of s-expression doesn't exist?",
-    );
-  }
+  const firstNode =
+    node.children.shift() ??
+    throwNull("Scamper is broken: first node of s-expression doesn't exist?");
 
-  // console.log(
-  //   "simplename:",
-  //   firstNode.simplename,
-  //   firstNode.simplename === `"${CaretTag}"`,
-  //   firstNode.simplename === BacktickTag,
-  // );
   // if first node is a caret, it should be inverted
   if (firstNode.simplename === `"${CaretTag}"`) {
-    // console.log("! caret", firstNode, node.children);
     return turnIntoBlock(node.children[0], blockMap, true);
   }
   // if it includes a backtick, it should be popped out
   if (firstNode.simplename === `"${BacktickTag}"`) {
-    // console.log("! backtick", firstNode, node.children);
     return turnIntoBlock(node.children[0], blockMap, !caretOperator);
   }
 
@@ -76,7 +64,7 @@ function turnIntoBlock(
   const blockChildren: Slot[] = [
     {
       id: firstBlockSlot.id,
-      locked: caretOperator ? true : firstBlockSlot.locked,
+      locked: firstBlockSlot.locked ? !caretOperator : caretOperator,
     },
   ];
   for (const child of node.children) {

@@ -2,7 +2,7 @@ import { createRoot } from "react-dom/client";
 import { throwNull } from "./common/utils.ts";
 import { App } from "./app/App.tsx";
 import { enableMapSet } from "immer";
-import { generateFromScamper } from "./problem-gen/gen-utils.ts";
+import { generateSolutionFromScamper } from "./problem-gen/gen-utils.ts";
 
 enableMapSet();
 
@@ -11,4 +11,4 @@ const root =
 
 createRoot(root).render(<App />);
 
-console.log(generateFromScamper("(+ 1 (+ 2 3))(- 1 2)"));
+console.log(generateSolutionFromScamper("(+ 1 (+ 2 3))(- 1 2)"));

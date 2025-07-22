@@ -1,5 +1,5 @@
 import { SectionTitles } from "../../utils.ts";
-import { generateFromScamper } from "../../../problem-gen/gen-utils.ts";
+import { generateSolutionFromScamper } from "../../../problem-gen/gen-utils.ts";
 
 // const plusId = "plus";
 // const oneId = "1";
@@ -35,7 +35,7 @@ import { generateFromScamper } from "../../../problem-gen/gen-utils.ts";
 //     },
 //   ],
 // ]);
-const blocks = generateFromScamper("^(+ `1 (+ 2 3))(- `1 2)");
+const blocks = generateSolutionFromScamper("^(+ `1 (+ 2 3))(- `1 2)");
 
 const solutionTopLevel = [...blocks.keys()].filter(
   (key) => blocks.get(key)?.parentId === SectionTitles.SolutionBox,

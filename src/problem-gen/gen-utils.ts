@@ -28,7 +28,7 @@ function turnIntoBlock(
     blockMap.set(blockId, {
       type: "ConstantBlock",
       value: node.simplename,
-      parentId: SectionTitles.BlockLibrary,
+      parentId: SectionTitles.SolutionBox,
     });
     return { id: blockId, locked: !caretInversion };
   }
@@ -92,7 +92,7 @@ function turnIntoBlock(
 
   blockMap.set(blockId, {
     type: "BlockWithChildren",
-    parentId: SectionTitles.BlockLibrary,
+    parentId: SectionTitles.SolutionBox,
     children: blockChildren,
   });
 
@@ -171,7 +171,7 @@ function parseTemplateSolution(src: string) {
   return new AST(values);
 }
 
-export function generateFromScamper(src: string) {
+export function generateSolutionFromScamper(src: string) {
   const { nodes: queue } = parseTemplateSolution(src);
 
   // console.log(queue);

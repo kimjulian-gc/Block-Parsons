@@ -58,6 +58,7 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
             const idSuffix = `:${id}:${index.toString()}`;
             const slotId = slot.id;
             if (slot.locked) {
+              // TODO: if final slot but locked, has no closing bracket.
               if (!slotId) {
                 return (
                   <Box key={index} padding={"0.25em"} color={"black"}></Box>

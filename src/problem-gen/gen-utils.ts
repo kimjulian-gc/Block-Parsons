@@ -30,7 +30,7 @@ function turnIntoBlock(
       value: node.simplename,
       parentId: SectionTitles.BlockLibrary,
     });
-    return { id: blockId, locked: caretInversion };
+    return { id: blockId, locked: !caretInversion };
   }
 
   // otherwise it is an s-expression with optional children
@@ -55,7 +55,7 @@ function turnIntoBlock(
   // if it includes a backtick, it should be popped out
   if (firstNode.simplename === `"${BacktickTag}"`) {
     console.log("! backtick", firstNode, node.children);
-    return turnIntoBlock(node.children[0], blockMap, caretInversion);
+    return turnIntoBlock(node.children[0], blockMap, !caretInversion);
   }
 
   function updateParentOfChild(childId: Slot["id"]) {
@@ -76,13 +76,18 @@ function turnIntoBlock(
   updateParentOfChild(firstBlockSlot.id);
 
   // const blockChildren = [{ id: null, locked: false }];
-  const blockChildren = [firstBlockSlot];
+  const blockChildren: Slot[] = [{ id: firstBlockSlot.id, locked: true }];
   for (const child of node.children) {
     // turnIntoBlock(child, blockMap);
     // blockChildren.push({ id: null, locked: false });
     const childSlot = turnIntoBlock(child, blockMap, caretInversion);
     updateParentOfChild(childSlot.id);
     blockChildren.push(childSlot);
+    // c  L out
+    // F  F F
+    // F  T T
+    // T  F F
+    // T  T F
   }
 
   blockMap.set(blockId, {

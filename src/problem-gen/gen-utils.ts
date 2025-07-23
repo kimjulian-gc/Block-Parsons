@@ -71,11 +71,6 @@ export function turnIntoBlock(
     const childSlot = turnIntoBlock(child, blockMap, caretOperator);
     updateParentOfChild(childSlot.id);
     blockChildren.push(childSlot);
-    // c  L out
-    // F  F F
-    // F  T T
-    // T  F F
-    // T  T F
   }
 
   blockMap.set(blockId, {

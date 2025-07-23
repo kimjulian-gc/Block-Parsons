@@ -5,21 +5,28 @@ import { useDroppable } from "@dnd-kit/core";
 import { Draggable } from "../common/dnd-wrappers/Draggable.tsx";
 import type { ReactElement } from "react";
 import { ArgumentSlotStyles } from "./argument-slot-styles.ts";
+import type { Slot } from "../common/providers/block/block-types.ts";
 
 export interface ArgumentSlotProps {
   idSuffix: string;
-  blockId?: string | null;
+  slot: Slot;
 }
 
 export const ArgumentSlotPrefix = "argument slot of ";
 
-export function ArgumentSlot({ idSuffix, blockId }: ArgumentSlotProps) {
+export function ArgumentSlot({
+  idSuffix,
+  slot: { id: blockId, acceptsFunction: acceptsFunctionValue = false },
+}: ArgumentSlotProps) {
   const { setNodeRef, isOver } = useDroppable({
     id: `${ArgumentSlotPrefix}${idSuffix}`,
   });
 
   const ChildBlock: ReactElement<BlockProps> | null = !blockId ? null : (
-    <Block id={blockId} />
+    <Block
+      id={blockId}
+      {...(acceptsFunctionValue ? { makeConstant: true } : {})}
+    />
   );
   return (
     <Box

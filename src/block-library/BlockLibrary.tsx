@@ -24,7 +24,9 @@ export function BlockLibrary() {
       >
         {libraryBlocks.map((id) => (
           <Draggable key={id} id={id}>
-            <Block id={id} presentational={true} />
+            {/* if it is a block with something locked in the first slot: function */}
+            {/* for functions, always render it as a constant block (only in the block library!) */}
+            <Block id={id} presentational={true} makeConstant={true} />
           </Draggable>
         ))}
       </Stack>

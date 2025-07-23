@@ -14,12 +14,14 @@ export interface BlockProps {
   id: string;
   presentational?: boolean;
   padding?: StackProps["padding"];
+  makeConstant?: boolean;
 }
 
 export function Block({
   id,
   presentational: presentationalProp,
   padding = "0.5em",
+  makeConstant = false,
 }: BlockProps) {
   const { blocks } = useBlockContext();
   const block =
@@ -50,7 +52,7 @@ export function Block({
       }
 
       const idSuffix = `:${id}:${index.toString()}`;
-      const propsToPass = { idSuffix, blockId: slotId };
+      const propsToPass = { idSuffix, slot };
       return presentational ? (
         <PresentationalArgumentSlot {...propsToPass} />
       ) : (
@@ -79,6 +81,11 @@ export function Block({
   if (!firstSlot.id || !firstSlot.locked) {
     restSlots.unshift(firstSlot);
     firstSlot = null;
+  }
+
+  if (makeConstant) {
+    const functionId = firstSlot?.id ?? throwNull("no function id");
+    return <Block id={functionId} />;
   }
 
   return (

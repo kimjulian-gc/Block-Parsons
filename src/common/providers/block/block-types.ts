@@ -1,9 +1,10 @@
 export interface Slot {
   id: string | null;
   locked: boolean;
+  acceptsFunction?: boolean;
 }
 
-type BlockType = "ConstantBlock" | "BlockWithChildren";
+export type BlockType = "ConstantBlock" | "BlockWithChildren";
 
 interface BaseBlock {
   type: BlockType;

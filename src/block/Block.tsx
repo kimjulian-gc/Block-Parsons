@@ -37,9 +37,9 @@ export function Block({
       if (isConstantBlock(childBlock)) {
         return <Box color={"black"}>{childBlock.value}</Box>;
       }
-      return <Block id={slotId} presentational padding={0} />;
+      return <Block id={slotId} padding={0} presentational={presentational} />;
     },
-    [blocks],
+    [blocks, presentational],
   );
 
   const getChildBlockElement = useCallback(

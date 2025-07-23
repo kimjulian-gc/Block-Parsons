@@ -1,4 +1,4 @@
-import { Box, Stack } from "@mui/material";
+import { Box, Stack, type StackProps } from "@mui/material";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
 import { throwNull } from "../common/utils.ts";
 import { PresentationalArgumentSlot } from "./PresentationalArgumentSlot.tsx";
@@ -13,9 +13,14 @@ import { useCallback } from "react";
 export interface BlockProps {
   id: string;
   presentational?: boolean;
+  padding?: StackProps["padding"];
 }
 
-export function Block({ id, presentational: presentationalProp }: BlockProps) {
+export function Block({
+  id,
+  presentational: presentationalProp,
+  padding = "0.5em",
+}: BlockProps) {
   const { blocks } = useBlockContext();
   const block =
     blocks.get(id) ?? throwNull(`attempted to render unknown block ${id}`);
@@ -32,7 +37,7 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
       if (isConstantBlock(childBlock)) {
         return <Box color={"black"}>{childBlock.value}</Box>;
       }
-      return <Block id={slotId} presentational />;
+      return <Block id={slotId} presentational padding={0} />;
     },
     [blocks],
   );
@@ -80,7 +85,7 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
     <Stack
       width={"fit-content"}
       bgcolor={"lightgray"}
-      padding={"0.5em"}
+      padding={padding}
       borderRadius={"0.5em"}
       fontFamily={"monospace"}
       spacing={1}

@@ -20,7 +20,7 @@ export function handleSetParent(
     parentId,
     dndInfo: { active, over },
   } = action.payload;
-  console.log(id, parentId);
+  // console.log(id, parentId);
 
   const child = blocks.get(id);
   if (!child) {
@@ -49,7 +49,7 @@ export function handleSetParent(
       active,
       over,
     );
-    console.log("new top level", newTopLevel);
+    // console.log("new top level", newTopLevel);
     draft.solutionTopLevel = [...newTopLevel];
     return;
   }
@@ -65,7 +65,7 @@ export function handleSetParent(
   const tempId = parentChildren[slotIndex].id;
   if (tempId === originalParentId) {
     // don't allow swap with original parent
-    console.warn("ignoring attempted swap with original parent");
+    // console.warn("ignoring attempted swap with original parent");
     return;
   }
   child.parentId = newParentId;
@@ -76,15 +76,15 @@ export function handleSetParent(
     draft.solutionTopLevel = updatedTopLevel;
     return;
   }
-  console.log("swapping", originalIndex);
+  // console.log("swapping", originalIndex);
   if (originalParentId === SectionTitles.SolutionBox) {
     // top level swap
-    console.warn("top level swap");
+    // console.warn("top level swap");
     // add temp to top level
     updatedTopLevel.splice(originalTopLevelIndex, 0, tempId);
   } else if (originalIndex > -1) {
     // update ogChildBlocks
-    console.warn("updating old parent's children");
+    // console.warn("updating old parent's children");
     parentChildren[originalIndex].id = tempId;
   }
   const swappedBlock =
@@ -110,7 +110,7 @@ function removeChildFromParent(
   if (originalIndex === -1) {
     return originalIndex;
   }
-  console.log("removing from old parent's children");
+  // console.log("removing from old parent's children");
   parentChildren[originalIndex].id = null;
   return originalIndex;
 }
@@ -133,7 +133,7 @@ function setTopLevelParent(
   over: Over | null,
 ) {
   // top-level block
-  console.warn("new parent top level", sectionTitle);
+  // console.warn("new parent top level", sectionTitle);
   const parentData =
     blocks.get(id) ?? throwNull(`parent block ${id} not found?`);
   if (sectionTitle === SectionTitles.BlockLibrary) {
@@ -161,7 +161,7 @@ function setTopLevelParent(
   const overBotDist = Math.abs(over.rect.bottom - activeTop);
   const sortAfter = overBotDist < overTopDist;
   const offset = sortAfter ? 1 : 0;
-  console.warn("sorting in place", overSortIndex, sortAfter);
+  // console.warn("sorting in place", overSortIndex, sortAfter);
 
   return updatedTopLevel.toSpliced(overSortIndex + offset, 0, id);
 }

@@ -3,7 +3,6 @@ import { throwNull } from "./common/utils.ts";
 import { App } from "./app/App.tsx";
 import { enableMapSet } from "immer";
 
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call
 enableMapSet();
 
 const root =

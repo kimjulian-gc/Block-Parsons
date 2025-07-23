@@ -26,7 +26,7 @@ export const blockReducer: ImmerReducer<BlockContextType, BlockDispatchType> = (
     // TODO: add more cases, for now ignore eslint
     case "SET_PARENT": {
       handleSetParent(draft, action);
-      console.log(draft.solutionTopLevel);
+      // console.log(draft.solutionTopLevel);
       return;
     }
     case "RESET": {

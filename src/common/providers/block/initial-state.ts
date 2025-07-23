@@ -1,52 +1,18 @@
-import type { BlockData } from "./block-types.ts";
 import { SectionTitles } from "../../utils.ts";
-import type { BlockContextType } from "./BlockContext.ts";
 
-const plusId = "plus";
-const oneId = "1";
-const addExprId = "add-expr";
+import {
+  generateInitialStateFromSolution,
+  generateSolutionFromScamper,
+} from "../../../problem-gen/state-generators.ts";
 
-const blocks = new Map<string, BlockData>([
-  [
-    plusId,
-    {
-      type: "ConstantBlock",
-      value: "+",
-      parentId: addExprId,
-    },
-  ],
-  [
-    oneId,
-    {
-      type: "ConstantBlock",
-      value: "1",
-      parentId: addExprId,
-    },
-  ],
-  [
-    addExprId,
-    {
-      type: "BlockWithChildren",
-      children: [
-        { id: plusId, locked: false },
-        { id: oneId, locked: false },
-        { id: null, locked: false },
-      ],
-      parentId: SectionTitles.SolutionBox,
-    },
-  ],
-]);
+const solution = generateSolutionFromScamper("^(`- 2 (reduce + (list `4 `5)))");
+const blocks = generateInitialStateFromSolution(solution);
 
 const solutionTopLevel = [...blocks.keys()].filter(
   (key) => blocks.get(key)?.parentId === SectionTitles.SolutionBox,
 );
 
-export const initialState: BlockContextType = {
+export const initialState = {
   blocks,
   solutionTopLevel,
 };
-
-// export const initialState = {
-//   blocks: generateFromScamper("(+ 1 (+ 2 3))(- 1 2)"),
-//   solutionTopLevel: List<string>(),
-// };

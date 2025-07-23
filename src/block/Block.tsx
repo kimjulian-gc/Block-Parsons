@@ -1,10 +1,14 @@
-import { Box, Stack} from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { ArgumentSlot } from "./ArgumentSlot.tsx";
 import { throwNull } from "../common/utils.ts";
 import { PresentationalArgumentSlot } from "./PresentationalArgumentSlot.tsx";
 import { useDndContext } from "@dnd-kit/core";
 import { useBlockContext } from "../common/providers/block/BlockContext.ts";
-import { isConstantBlock } from "../common/providers/block/block-types.ts";
+import {
+  isConstantBlock,
+  type Slot,
+} from "../common/providers/block/block-types.ts";
+import { useCallback } from "react";
 
 export interface BlockProps {
   id: string;
@@ -19,6 +23,37 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
   const { active } = useDndContext();
   const presentational = presentationalProp || active?.id === id;
 
+  const getLockedBlockElement = useCallback(
+    (slotId: string | null) => {
+      if (!slotId) return <Box color={"black"} />;
+      const childBlock =
+        blocks.get(slotId) ??
+        throwNull(`should have found block with id ${slotId}`);
+      if (isConstantBlock(childBlock)) {
+        return <Box color={"black"}>{childBlock.value}</Box>;
+      }
+      return <Block id={slotId} presentational />;
+    },
+    [blocks],
+  );
+
+  const getChildBlockElement = useCallback(
+    (slot: Slot, index: number) => {
+      const slotId = slot.id;
+      if (slot.locked) {
+        return getLockedBlockElement(slotId);
+      }
+
+      const idSuffix = `:${id}:${index.toString()}`;
+      const propsToPass = { idSuffix, blockId: slotId };
+      return presentational ? (
+        <PresentationalArgumentSlot {...propsToPass} />
+      ) : (
+        <ArgumentSlot {...propsToPass} />
+      );
+    },
+    [getLockedBlockElement, id, presentational],
+  );
 
   if (isConstantBlock(block)) {
     return (
@@ -33,7 +68,13 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
     );
   }
 
-  const args = block.children;
+  const [firstChild, ...restChildren] = block.children;
+  let firstSlot: Slot | null = firstChild;
+  const restSlots = restChildren;
+  if (!firstSlot.id || !firstSlot.locked) {
+    restSlots.unshift(firstSlot);
+    firstSlot = null;
+  }
 
   return (
     <Stack
@@ -49,52 +90,42 @@ export function Block({ id, presentational: presentationalProp }: BlockProps) {
         direction="row"
         // if the current block has childblocks, align baseline, else align flex-start
         alignItems={
-          args.some((arg) => arg !== null) ? "baseline" : "flex-start"
+          restSlots.some((arg) => arg.id !== null) ? "baseline" : "flex-start"
         }
-        spacing={2}
+        spacing={1}
       >
-  <Box>(</Box>
-<Stack spacing={1}>
-        {args.map((slot, index) => {
-          const idSuffix = `:${id}:${index.toString()}`;
-          const slotId = slot.id ?? null;
-          if (slot.locked) {
-            const childBlock = slotId ? blocks.get(slotId) : null;
-            const label = childBlock
-              ? isConstantBlock(childBlock)
-                ? childBlock.value
-                : "(...)"
-              : " ";
-            return (
-              <Box key={index} padding={"0.25em"} color={"black"}>
-                {label}
-              </Box>
+        <Stack direction={"row"}>
+          <Box>(</Box>
+          {firstSlot &&
+            // TODO: if only one slot, this one won't have an ending bracket
+            getChildBlockElement(firstSlot, 0)}
+        </Stack>
+        <Stack spacing={1}>
+          {restSlots.map((slot, index) => {
+            const ChildBlock = getChildBlockElement(
+              slot,
+              firstSlot ? index + 1 : index,
             );
-          }
-        const propsToPass = { idSuffix, blockId: slotId };
-          const ChildBlock = presentational ? (
-            <PresentationalArgumentSlot {...propsToPass} />
-          ) : (
-            <ArgumentSlot {...propsToPass} />
-          );
+            const isLast = index === restSlots.length - 1;
 
-          const isLast = index === args.length - 1;
-
-          return (
-            <Stack direction="row" alignItems="flex-end" key={index}>
-              {ChildBlock}
-              {isLast && (
-                <Box
-                  marginLeft="0.25em"
-                  {...(slotId && blocks.has(slotId) ? { marginBottom: "1em" } : {})}
-                >
-                  )
-                </Box>
-              )}
-            </Stack>
-          );
-        })}
-</Stack>
+            return (
+              <Stack direction="row" alignItems="flex-end" key={index}>
+                {ChildBlock}
+                {isLast && (
+                  <Box
+                    marginLeft="0.25em"
+                    {...(!slot.locked && slot.id && blocks.has(slot.id)
+                      ? { marginBottom: "1em" }
+                      : {})}
+                  >
+                    )
+                  </Box>
+                )}
+              </Stack>
+            );
+          })}
+        </Stack>
       </Stack>
     </Stack>
-  );}
+  );
+}

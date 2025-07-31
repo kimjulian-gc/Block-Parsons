@@ -4,7 +4,7 @@
 
 ### Contributors
 
-This project was undertaken by the following individuals, listed in alphabetical order:
+This project was undertaken by the following Grinnell College students, listed in alphabetical order:
 
 - Salyan Karki ([SalyanKarki](https://github.com/SalyanKarki))
 - Julian Kim ([eoyoa](https://github.com/eoyoa))

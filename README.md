@@ -3,6 +3,9 @@
 > A nested block-based approach to Parsons Problems that emphasize functional problem solving.
 
 ### Contributors
+
+This project was undertaken by the following individuals, listed in alphabetical order:
+
 - Salyan Karki ([SalyanKarki](https://github.com/SalyanKarki))
 - Julian Kim ([eoyoa](https://github.com/eoyoa))
 - Elene Sturua ([elenesturua](https://github.com/elenesturua))
@@ -70,3 +73,4 @@ Here is a list of things to do if we had another five weeks (in order of subject
 - There should still be a general fallback option when instructors don't tie their Scheme-based course to Runestone.
   - Consider databases with good frontends and APIs.
 ### • Target the problem definition specification of the [SPLICE Working Group: Parsons Problems Interoperabilty Standards](https://cssplice.org/parsons/index.html).
+### • Allow the `id` of the React root `div` to be variable.

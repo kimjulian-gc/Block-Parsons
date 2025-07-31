@@ -32,13 +32,13 @@ pnpm install
 
 For now, there is only a frontend component.
 
-**To serve the frontend locally for development:**
+### To serve the frontend locally for development:
 
 ```shell
 pnpm run dev
 ```
 
-**To embed the frontend into another website/web-based platform (i.e. [Runestone](https://github.com/RunestoneInteractive/rs)):**
+### To embed the frontend into another website/web-based platform (i.e. [Runestone](https://github.com/RunestoneInteractive/rs)):
 
 1. Build the script with `pnpm run build`.
 2. Ensure the destination website has a `div` HTML element with `id="root"`.
@@ -56,7 +56,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for more details.
 
 Here is a list of things to do if we had another five weeks (in order of subjective importance):
 
-### • Implement Scamper interop and error interpretation.
+### • Implement error interpretation / extend Scamper interop capabilities.
 - Our vision for error interpretation was to generate human-readable errors based on actual Scamper errors.
 - This was inspired by [Rust's approach to helpful compiler errors](https://kobzol.github.io/rust/rustc/2025/05/16/evolution-of-rustc-errors.html).
 - Prior research is advised before doing error interpretation, in case someone has thought of this before.
